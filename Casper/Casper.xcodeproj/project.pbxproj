@@ -1,0 +1,631 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		27217AA6296ACA500072F0BF /* CasperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AA5296ACA500072F0BF /* CasperApp.swift */; };
+		27217AA8296ACA500072F0BF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AA7296ACA500072F0BF /* ContentView.swift */; };
+		27217AAA296ACA510072F0BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27217AA9296ACA510072F0BF /* Assets.xcassets */; };
+		27217AAD296ACA510072F0BF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27217AAC296ACA510072F0BF /* Preview Assets.xcassets */; };
+		27217AAF296ACA510072F0BF /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AAE296ACA510072F0BF /* Persistence.swift */; };
+		27217AB2296ACA510072F0BF /* Casper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */; };
+		27217ABC296ACA510072F0BF /* CasperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217ABB296ACA510072F0BF /* CasperTests.swift */; };
+		27217AC6296ACA510072F0BF /* CasperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AC5296ACA510072F0BF /* CasperUITests.swift */; };
+		27217AC8296ACA510072F0BF /* CasperUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AC7296ACA510072F0BF /* CasperUITestsLaunchTests.swift */; };
+		27217AD7296B66F10072F0BF /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AD6296B66F10072F0BF /* SessionView.swift */; };
+		27E96D89296B6E4100360B42 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D88296B6E4100360B42 /* FriendsView.swift */; };
+		27E96D8B296B6E5D00360B42 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D8A296B6E5D00360B42 /* SettingsView.swift */; };
+		27E96D8D296B6EFF00360B42 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D8C296B6EFF00360B42 /* MainTabsView.swift */; };
+		27E96D8F296B710E00360B42 /* SessionCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D8E296B710E00360B42 /* SessionCreationView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		27217AB8296ACA510072F0BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27217A9A296ACA500072F0BF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27217AA1296ACA500072F0BF;
+			remoteInfo = Casper;
+		};
+		27217AC2296ACA510072F0BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27217A9A296ACA500072F0BF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27217AA1296ACA500072F0BF;
+			remoteInfo = Casper;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		27217AA2296ACA500072F0BF /* Casper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Casper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27217AA5296ACA500072F0BF /* CasperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasperApp.swift; sourceTree = "<group>"; };
+		27217AA7296ACA500072F0BF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		27217AA9296ACA510072F0BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27217AAC296ACA510072F0BF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		27217AAE296ACA510072F0BF /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		27217AB1296ACA510072F0BF /* Casper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Casper.xcdatamodel; sourceTree = "<group>"; };
+		27217AB7296ACA510072F0BF /* CasperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CasperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		27217ABB296ACA510072F0BF /* CasperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasperTests.swift; sourceTree = "<group>"; };
+		27217AC1296ACA510072F0BF /* CasperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CasperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		27217AC5296ACA510072F0BF /* CasperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasperUITests.swift; sourceTree = "<group>"; };
+		27217AC7296ACA510072F0BF /* CasperUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasperUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		27217AD6296B66F10072F0BF /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
+		27E96D88296B6E4100360B42 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
+		27E96D8A296B6E5D00360B42 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		27E96D8C296B6EFF00360B42 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
+		27E96D8E296B710E00360B42 /* SessionCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCreationView.swift; sourceTree = "<group>"; };
+		27E96D902987AAE700360B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27217A9F296ACA500072F0BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27217AB4296ACA510072F0BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27217ABE296ACA510072F0BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		27217A99296ACA500072F0BF = {
+			isa = PBXGroup;
+			children = (
+				27217AA4296ACA500072F0BF /* Casper */,
+				27217ABA296ACA510072F0BF /* CasperTests */,
+				27217AC4296ACA510072F0BF /* CasperUITests */,
+				27217AA3296ACA500072F0BF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		27217AA3296ACA500072F0BF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				27217AA2296ACA500072F0BF /* Casper.app */,
+				27217AB7296ACA510072F0BF /* CasperTests.xctest */,
+				27217AC1296ACA510072F0BF /* CasperUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		27217AA4296ACA500072F0BF /* Casper */ = {
+			isa = PBXGroup;
+			children = (
+				27E96D902987AAE700360B42 /* Info.plist */,
+				27217AA5296ACA500072F0BF /* CasperApp.swift */,
+				27217AA7296ACA500072F0BF /* ContentView.swift */,
+				27217AD6296B66F10072F0BF /* SessionView.swift */,
+				27E96D8E296B710E00360B42 /* SessionCreationView.swift */,
+				27E96D8C296B6EFF00360B42 /* MainTabsView.swift */,
+				27E96D88296B6E4100360B42 /* FriendsView.swift */,
+				27E96D8A296B6E5D00360B42 /* SettingsView.swift */,
+				27217AA9296ACA510072F0BF /* Assets.xcassets */,
+				27217AAE296ACA510072F0BF /* Persistence.swift */,
+				27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */,
+				27217AAB296ACA510072F0BF /* Preview Content */,
+			);
+			path = Casper;
+			sourceTree = "<group>";
+		};
+		27217AAB296ACA510072F0BF /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				27217AAC296ACA510072F0BF /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		27217ABA296ACA510072F0BF /* CasperTests */ = {
+			isa = PBXGroup;
+			children = (
+				27217ABB296ACA510072F0BF /* CasperTests.swift */,
+			);
+			path = CasperTests;
+			sourceTree = "<group>";
+		};
+		27217AC4296ACA510072F0BF /* CasperUITests */ = {
+			isa = PBXGroup;
+			children = (
+				27217AC5296ACA510072F0BF /* CasperUITests.swift */,
+				27217AC7296ACA510072F0BF /* CasperUITestsLaunchTests.swift */,
+			);
+			path = CasperUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		27217AA1296ACA500072F0BF /* Casper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27217ACB296ACA510072F0BF /* Build configuration list for PBXNativeTarget "Casper" */;
+			buildPhases = (
+				27217A9E296ACA500072F0BF /* Sources */,
+				27217A9F296ACA500072F0BF /* Frameworks */,
+				27217AA0296ACA500072F0BF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Casper;
+			productName = Casper;
+			productReference = 27217AA2296ACA500072F0BF /* Casper.app */;
+			productType = "com.apple.product-type.application";
+		};
+		27217AB6296ACA510072F0BF /* CasperTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27217ACE296ACA510072F0BF /* Build configuration list for PBXNativeTarget "CasperTests" */;
+			buildPhases = (
+				27217AB3296ACA510072F0BF /* Sources */,
+				27217AB4296ACA510072F0BF /* Frameworks */,
+				27217AB5296ACA510072F0BF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27217AB9296ACA510072F0BF /* PBXTargetDependency */,
+			);
+			name = CasperTests;
+			productName = CasperTests;
+			productReference = 27217AB7296ACA510072F0BF /* CasperTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		27217AC0296ACA510072F0BF /* CasperUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27217AD1296ACA510072F0BF /* Build configuration list for PBXNativeTarget "CasperUITests" */;
+			buildPhases = (
+				27217ABD296ACA510072F0BF /* Sources */,
+				27217ABE296ACA510072F0BF /* Frameworks */,
+				27217ABF296ACA510072F0BF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				27217AC3296ACA510072F0BF /* PBXTargetDependency */,
+			);
+			name = CasperUITests;
+			productName = CasperUITests;
+			productReference = 27217AC1296ACA510072F0BF /* CasperUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		27217A9A296ACA500072F0BF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					27217AA1296ACA500072F0BF = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					27217AB6296ACA510072F0BF = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = 27217AA1296ACA500072F0BF;
+					};
+					27217AC0296ACA510072F0BF = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = 27217AA1296ACA500072F0BF;
+					};
+				};
+			};
+			buildConfigurationList = 27217A9D296ACA500072F0BF /* Build configuration list for PBXProject "Casper" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 27217A99296ACA500072F0BF;
+			productRefGroup = 27217AA3296ACA500072F0BF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				27217AA1296ACA500072F0BF /* Casper */,
+				27217AB6296ACA510072F0BF /* CasperTests */,
+				27217AC0296ACA510072F0BF /* CasperUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		27217AA0296ACA500072F0BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27217AAD296ACA510072F0BF /* Preview Assets.xcassets in Resources */,
+				27217AAA296ACA510072F0BF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27217AB5296ACA510072F0BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27217ABF296ACA510072F0BF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		27217A9E296ACA500072F0BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27E96D8B296B6E5D00360B42 /* SettingsView.swift in Sources */,
+				27E96D89296B6E4100360B42 /* FriendsView.swift in Sources */,
+				27217AAF296ACA510072F0BF /* Persistence.swift in Sources */,
+				27E96D8F296B710E00360B42 /* SessionCreationView.swift in Sources */,
+				27217AD7296B66F10072F0BF /* SessionView.swift in Sources */,
+				27217AB2296ACA510072F0BF /* Casper.xcdatamodeld in Sources */,
+				27217AA8296ACA500072F0BF /* ContentView.swift in Sources */,
+				27217AA6296ACA500072F0BF /* CasperApp.swift in Sources */,
+				27E96D8D296B6EFF00360B42 /* MainTabsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27217AB3296ACA510072F0BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27217ABC296ACA510072F0BF /* CasperTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27217ABD296ACA510072F0BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27217AC8296ACA510072F0BF /* CasperUITestsLaunchTests.swift in Sources */,
+				27217AC6296ACA510072F0BF /* CasperUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27217AB9296ACA510072F0BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27217AA1296ACA500072F0BF /* Casper */;
+			targetProxy = 27217AB8296ACA510072F0BF /* PBXContainerItemProxy */;
+		};
+		27217AC3296ACA510072F0BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27217AA1296ACA500072F0BF /* Casper */;
+			targetProxy = 27217AC2296ACA510072F0BF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		27217AC9296ACA510072F0BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		27217ACA296ACA510072F0BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		27217ACC296ACA510072F0BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Casper/Preview Content\"";
+				DEVELOPMENT_TEAM = U43P4NW84Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Casper/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to read and write from photos library to allow for correct photo sync behavior.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mershov.Casper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		27217ACD296ACA510072F0BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Casper/Preview Content\"";
+				DEVELOPMENT_TEAM = U43P4NW84Q;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Casper/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Need to read and write from photos library to allow for correct photo sync behavior.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mershov.Casper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		27217ACF296ACA510072F0BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mershov.CasperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Casper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Casper";
+			};
+			name = Debug;
+		};
+		27217AD0296ACA510072F0BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mershov.CasperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Casper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Casper";
+			};
+			name = Release;
+		};
+		27217AD2296ACA510072F0BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mershov.CasperUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Casper;
+			};
+			name = Debug;
+		};
+		27217AD3296ACA510072F0BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mershov.CasperUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Casper;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27217A9D296ACA500072F0BF /* Build configuration list for PBXProject "Casper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27217AC9296ACA510072F0BF /* Debug */,
+				27217ACA296ACA510072F0BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27217ACB296ACA510072F0BF /* Build configuration list for PBXNativeTarget "Casper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27217ACC296ACA510072F0BF /* Debug */,
+				27217ACD296ACA510072F0BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27217ACE296ACA510072F0BF /* Build configuration list for PBXNativeTarget "CasperTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27217ACF296ACA510072F0BF /* Debug */,
+				27217AD0296ACA510072F0BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27217AD1296ACA510072F0BF /* Build configuration list for PBXNativeTarget "CasperUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27217AD2296ACA510072F0BF /* Debug */,
+				27217AD3296ACA510072F0BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				27217AB1296ACA510072F0BF /* Casper.xcdatamodel */,
+			);
+			currentVersion = 27217AB1296ACA510072F0BF /* Casper.xcdatamodel */;
+			path = Casper.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 27217A9A296ACA500072F0BF /* Project object */;
+}
