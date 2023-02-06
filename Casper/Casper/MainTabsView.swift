@@ -9,18 +9,17 @@ import SwiftUI
 
 struct MainTabsView: View {
     @State private var default_tab = 2
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @StateObject var asset_library_helper = AssetLibraryHelper()
 
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        
-        
         TabView(selection:$default_tab) {
             FriendsView()
                 .tabItem {
                     Label("Friends", systemImage: "list.dash")
                 }.tag(1)
-            SessionView()
+            SessionView(assetLibraryHelper: asset_library_helper)
                 .tabItem {
                     Label("Sessions", systemImage: "list.dash")
                 }.tag(2)
@@ -31,7 +30,14 @@ struct MainTabsView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onReceive(timer) { time in
-            print("timer fired @ \(time)")
+            do {
+                try asset_library_helper.fetchAndPossiblyPersistLatestAsset()
+            } catch {
+                // TODO(mershov): Ideally, an error at this point should probably be logged or persisted somehow.
+                // For now, no need to do anything with this error.
+                print("Error occured in fetchAndPossiblyPersistLatestAsset: \(error)")
+            }
+                
         }
     }
 }
