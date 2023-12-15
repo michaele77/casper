@@ -16,6 +16,7 @@ struct UserInfo {
     var password: String
 }
 
+
 struct ContentView: View {
     @State private var firstName: String = ""
     @State private var lastName: String = ""
