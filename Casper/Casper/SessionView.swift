@@ -7,8 +7,11 @@
 
 import SwiftUI
 import Photos
+import BackgroundTasks
 
 struct SessionView: View {
+    @State var globalVars: GlobalVars
+    
     @State private var showNewSessionCreationPage: Bool = false
     @State private var assetMap: [String: Asset] = [:]
     @State private var shownImage: UIImage = UIImage(systemName: "house")!
@@ -16,9 +19,9 @@ struct SessionView: View {
     // This is assumed to be non-nil by the code (something should always be injected).
     var assetLibraryHelper: AssetLibraryHelper?
     
-    init(assetLibraryHelper: AssetLibraryHelper) {
-        self.assetLibraryHelper = assetLibraryHelper
-    }
+//    init(assetLibraryHelper: AssetLibraryHelper, ) {
+//        self.assetLibraryHelper = assetLibraryHelper
+//    }
     
     var body: some View {
         ZStack {
@@ -27,6 +30,10 @@ struct SessionView: View {
             
             VStack() {
                 Text("Sessions!")
+                    .onAppear {
+                        print("<<9>>")
+                        scheduleBackgroundTask()
+                    }
                 
                 Button(action: {
                     assetMap = assetLibraryHelper!.readFromPhotoLibrary()
@@ -57,6 +64,13 @@ struct SessionView: View {
                 .bold(false)
                 .font(.custom("Copperplate", size: 20))
                 
+                Text("Debug info: ")
+                Text("--> number of timer counts: \(globalVars.timerTriggerCounter)")
+                Text("--> number of active background counts: \(globalVars.activeBackgroundCounter)")
+                Text("--> number of inactive background counts: \(globalVars.inactiveBackgroundCounter)")
+                Text("--> number of actual tasks triggered: \(globalVars.tasksCounter)")
+                Text("--> number of session view tasks counts: \(globalVars.sessionViewTaskCounter)")
+                
                 Image(uiImage: shownImage)
                 
                 Button(action: {
@@ -78,11 +92,37 @@ struct SessionView: View {
             }
         }
     }
+    
+    func scheduleBackgroundTask() {
+        print("<<10>>")
+        globalVars.sessionViewTaskCounter += 1
+        let request = BGAppRefreshTaskRequest(identifier: "photoTask2")
+        // Schedule a request in 10 seconds.
+        print("Adding a schedule!")
+        request.earliestBeginDate = .now
+        print("what is now? \(request.earliestBeginDate)")
+        request.earliestBeginDate = .now.addingTimeInterval(5)
+        print("what is now + 15?? \(request.earliestBeginDate))")
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("DIDNT WORK!!! Error: \(error.localizedDescription)")
+        }
+        
+//            let taskRequest = BGAppRefreshTaskRequest(identifier: "com.yourapp.backgroundTask")
+//            taskRequest.earliestBeginDate = Date(timeIntervalSinceNow: 60 * 15) // 15 minutes from now
+//
+//            do {
+//                try BGTaskScheduler.shared.submit(taskRequest)
+//            } catch {
+//                print("Unable to submit task request: \(error.localizedDescription)")
+//            }
+    }
 }
 
 struct SessionView_Previews: PreviewProvider {
     static var previews: some View {
         let assetLibraryHelper = AssetLibraryHelper()
-        SessionView(assetLibraryHelper: assetLibraryHelper)
+        SessionView(globalVars: GlobalVars(), assetLibraryHelper: assetLibraryHelper)
     }
 }

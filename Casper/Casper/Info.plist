@@ -4,6 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
+		<string>photoTask2</string>
 		<string>casperPhotoCheckTask</string>
 	</array>
 	<key>UIBackgroundModes</key>

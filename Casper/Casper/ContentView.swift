@@ -18,6 +18,8 @@ struct UserInfo {
 
 
 struct ContentView: View {
+    @Binding var globalVars: GlobalVars
+    
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var email: String = ""
@@ -108,7 +110,7 @@ struct ContentView: View {
                     // TODO(mershov): We need validation here (password confirmation, all fields are required, etc).
                     // Once navigating off of the sign up page, dissallow the use of a back button, and persist the input data in a local DB.
                     NavigationLink(
-                        destination: MainTabsView()) {
+                        destination: MainTabsView(globalVars: $globalVars)) {
                         Text("sign up")
                             .font(.custom("Copperplate", size: 40))
                             .padding(.horizontal)
@@ -138,6 +140,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(globalVars: .constant(GlobalVars()))
     }
 }

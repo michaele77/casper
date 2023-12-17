@@ -17,7 +17,7 @@ class AssetLibraryHelper: ObservableObject {
     init() {}
     
     public func fetchAndPossiblyPersistLatestAsset() throws {
-        print("timer fired @ \(String(describing: time))")
+        print("timer fired @ \(String(describing: time))")   
         // TODO(mershov): Consider folding this into the asset_library_helper in its entirety
         // Let's read from the photo library.
         let asset: Asset? = fetchMetadataForLatestAsset()
@@ -64,7 +64,7 @@ class AssetLibraryHelper: ObservableObject {
         var allAssetMap: [String: Asset] = [:]
         print("<<0>>")
         PHPhotoLibrary.requestAuthorization { status in
-            print(status)
+            print(status.rawValue)
             print("<<1>>")
             if status == .authorized {
                 var counter = 0

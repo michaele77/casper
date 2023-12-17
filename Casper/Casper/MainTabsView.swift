@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainTabsView: View {
+    @Binding var globalVars: GlobalVars
+
     @State private var default_tab = 2
     @StateObject var asset_library_helper = AssetLibraryHelper()
 
@@ -19,7 +21,7 @@ struct MainTabsView: View {
                 .tabItem {
                     Label("Friends", systemImage: "list.dash")
                 }.tag(1)
-            SessionView(assetLibraryHelper: asset_library_helper)
+            SessionView(globalVars: globalVars, assetLibraryHelper: asset_library_helper)
                 .tabItem {
                     Label("Sessions", systemImage: "list.dash")
                 }.tag(2)
@@ -32,6 +34,7 @@ struct MainTabsView: View {
         .onReceive(timer) { time in
             do {
                 try asset_library_helper.fetchAndPossiblyPersistLatestAsset()
+                globalVars.timerTriggerCounter += 1
             } catch {
                 // TODO(mershov): Ideally, an error at this point should probably be logged or persisted somehow.
                 // For now, no need to do anything with this error.
@@ -44,6 +47,6 @@ struct MainTabsView: View {
 
 struct MainTabsView_Previews: PreviewProvider {
     static var previews: some View {
-        MainTabsView()
+        MainTabsView(globalVars: .constant(GlobalVars()))
     }
 }

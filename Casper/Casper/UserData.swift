@@ -42,3 +42,11 @@ struct UserPreferences: Hashable, Codable {
     var out_of_app_library_scan_period_seconds: Int = 5
 }
 
+class GlobalVars: ObservableObject {
+    @Published var timerTriggerCounter: Int = 0
+    @Published var activeBackgroundCounter: Int = 0
+    @Published var inactiveBackgroundCounter: Int = 0
+    @Published var tasksCounter: Int = 0
+    @Published var sessionViewTaskCounter: Int = 0
+}
+
