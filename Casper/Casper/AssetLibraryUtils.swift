@@ -17,7 +17,7 @@ class AssetLibraryHelper: ObservableObject {
     init() {}
     
     public func fetchAndPossiblyPersistLatestAsset() throws {
-        print("timer fired @ \(String(describing: time))")   
+        print("timer fired @ \(String(describing: time))")
         // TODO(mershov): Consider folding this into the asset_library_helper in its entirety
         // Let's read from the photo library.
         let asset: Asset? = fetchMetadataForLatestAsset()

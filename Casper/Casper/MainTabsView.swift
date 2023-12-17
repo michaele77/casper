@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct MainTabsView: View {
-    @Binding var globalVars: GlobalVars
-
+    // NOTE(mershov): We can try updating this to be a pure binding, then make the variable in the sessionView (or one of the other views) the @State view
+    @StateObject var globalVars: GlobalVars = GlobalVars()
+    
     @State private var default_tab = 2
     @StateObject var asset_library_helper = AssetLibraryHelper()
 
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    // Create a timer that fires every 10 seconds.
+    let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     var body: some View {
         TabView(selection:$default_tab) {
@@ -34,11 +36,11 @@ struct MainTabsView: View {
         .onReceive(timer) { time in
             do {
                 try asset_library_helper.fetchAndPossiblyPersistLatestAsset()
-                globalVars.timerTriggerCounter += 1
+                globalVars.inAppTimerFiredCounter += 1
             } catch {
                 // TODO(mershov): Ideally, an error at this point should probably be logged or persisted somehow.
                 // For now, no need to do anything with this error.
-                print("Error occured in fetchAndPossiblyPersistLatestAsset: \(error)")
+                print("Error occured in fetchAndPossiblyPersistLatestAsset: \(error.localizedDescription)")
             }
                 
         }
@@ -47,6 +49,6 @@ struct MainTabsView: View {
 
 struct MainTabsView_Previews: PreviewProvider {
     static var previews: some View {
-        MainTabsView(globalVars: .constant(GlobalVars()))
+        MainTabsView(globalVars: GlobalVars())
     }
 }

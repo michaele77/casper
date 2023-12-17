@@ -43,10 +43,6 @@ struct UserPreferences: Hashable, Codable {
 }
 
 class GlobalVars: ObservableObject {
-    @Published var timerTriggerCounter: Int = 0
-    @Published var activeBackgroundCounter: Int = 0
-    @Published var inactiveBackgroundCounter: Int = 0
-    @Published var tasksCounter: Int = 0
-    @Published var sessionViewTaskCounter: Int = 0
+    @Published var inAppTimerFiredCounter: Int = 0
 }
 
