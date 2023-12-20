@@ -13,10 +13,15 @@ struct PersistenceController {
     static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
+//        let user = UserAttributes(context: viewContext)
+//        user.firstName = "bob"
+//        user.lastName = "jones"
+//        let statistics = Statistics(context: viewContext)
+//        statistics.timesAppsHasLaunched = 12
+//        let metadata = Metadata(context: viewContext)
+//        let debug = Debug(context: viewContext)
+//        debug.pingCounter = 2
+//        debug.timerCounter = 3
         do {
             try viewContext.save()
         } catch {
@@ -48,9 +53,22 @@ struct PersistenceController {
                  * The store could not be migrated to the current model version.
                  Check the error message to determine what the actual problem was.
                  */
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                fatalError("Error in initializing and loading the Persistance Container. Error: \(error). \n User Info: \(error.userInfo). \n Localized Description: \(error.localizedDescription)")
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    func save() {
+        let context = container.viewContext
+
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                // TODO: Replace this with a non-fatal error.
+                fatalError("Could not save changes made to the Persistance Container. Error description: \(error.localizedDescription)")
+            }
+        }
     }
 }

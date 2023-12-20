@@ -18,7 +18,6 @@ class AssetLibraryHelper: ObservableObject {
     
     public func fetchAndPossiblyPersistLatestAsset() throws {
         print("timer fired @ \(String(describing: time))")
-        // TODO(mershov): Consider folding this into the asset_library_helper in its entirety
         // Let's read from the photo library.
         let asset: Asset? = fetchMetadataForLatestAsset()
         var assetLibraryMetadata = AssetLibraryMetadata()
@@ -37,7 +36,7 @@ class AssetLibraryHelper: ObservableObject {
     }
     
     public func fetchMetadataForLatestAsset() -> Asset? {
-        // Sort the images by descending creation date and fetch the last 10
+        // Sort the images by descending creation date and fetch the last 10.
         let imagesToFetch = 10
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
@@ -207,7 +206,7 @@ class AssetLibraryHelper: ObservableObject {
         
         return Asset(localId: object.localIdentifier,
                      type: asset_type,
-                     creationTime: object.creationDate ?? Date(timeIntervalSince1970: TimeInterval(10)),
+                     creationTime: object.creationDate ?? Date(timeIntervalSince1970: 0),
                      xDimension: object.pixelWidth,
                      yDimension: object.pixelHeight,
                      duration: object.duration)

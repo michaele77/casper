@@ -18,6 +18,9 @@ struct UserInfo {
 
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) var moc
+    @FetchRequest(sortDescriptors: []) var userMetadata: FetchedResults<UserAttributes>
+
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var email: String = ""
@@ -59,6 +62,9 @@ struct ContentView: View {
                         .bold(false)
                         .foregroundColor(Color(.systemBlue))
                         .offset(x: 0, y: -60)
+                    
+                    Text("DEBUG: has created account? \((userMetadata.first == nil) ? "false" : "true")")
+                    Text("DEBUG: Hello \(userMetadata.first?.firstName ?? "UNKNOWN_USER")")
                     
                     Group {
                         TextField("first Name",
@@ -127,6 +133,14 @@ struct ContentView: View {
                             print("my datamanager list is long")
                             print("firstName is \(firstName)")
                             print("password is \(password)")
+                            
+                            // Persist the user data.
+                            // TODO: The issue with this code is that it basically appends a new user everytime "Sign Up" is clicked. Really, we just want to be replacing this one "main" user. Not sure how to do that yet.
+                            let user = UserAttributes(context: moc)
+                            user.firstName = firstName
+                            user.lastName = lastName
+                            user.hasSignedUp = true
+                            try? moc.save()
                         })
                         
                 }

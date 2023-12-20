@@ -10,6 +10,7 @@ import Photos
 import BackgroundTasks
 
 struct SessionView: View {
+    @FetchRequest(sortDescriptors: []) var fetchedStats: FetchedResults<Statistics>
     @ObservedObject var globalVars: GlobalVars
     
     @State private var showNewSessionCreationPage: Bool = false
@@ -57,6 +58,7 @@ struct SessionView: View {
                 .font(.custom("Copperplate", size: 20))
                 
                 Text("DEBUG INFO: [timer counter] --> \(globalVars.inAppTimerFiredCounter)")
+                Text("PERSISTED COUNTERS: [timer counter] --> \(fetchedStats.first!.timerCounter), [times app has launched] --> \(fetchedStats.first!.timesAppHasLaunched)")
                 
                 Image(uiImage: shownImage)
                 

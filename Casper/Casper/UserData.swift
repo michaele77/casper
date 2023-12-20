@@ -25,8 +25,8 @@ struct Asset: Hashable, Codable {
 
 // Photo library metadata that can be changed quite frequently.
 struct AssetLibraryMetadata: Hashable, Codable {
-    // When the last time AssetMetadata was updated.
-    var last_modified_time: Date = Date(timeIntervalSince1970: TimeInterval(0))
+    // When the last library scan was done.
+    var last_modified_time: Date = Date(timeIntervalSince1970: 0)
     // Total number of assets at the given library scan.
     var total_asset_number: Int = -1
     // Last detected asset from Photo library scans.
