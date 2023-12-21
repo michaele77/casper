@@ -30,7 +30,7 @@ class AssetLibraryHelper: ObservableObject {
             print("Got a viable asset")
         }
         
-        try PersistenceManager.shared.write(asset_library_metadata: assetLibraryMetadata)
+//        try PersistenceManager.shared.write(asset_library_metadata: assetLibraryMetadata)
 
         print("Persisted asset with creation time of \(assetLibraryMetadata.last_detected_asset.creationTime)")
     }

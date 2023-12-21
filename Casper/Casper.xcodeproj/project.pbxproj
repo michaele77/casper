@@ -21,7 +21,6 @@
 		27E96D8B296B6E5D00360B42 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D8A296B6E5D00360B42 /* SettingsView.swift */; };
 		27E96D8D296B6EFF00360B42 /* MainTabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D8C296B6EFF00360B42 /* MainTabsView.swift */; };
 		27E96D8F296B710E00360B42 /* SessionCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D8E296B710E00360B42 /* SessionCreationView.swift */; };
-		27E96D922990910400360B42 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D912990910400360B42 /* PersistenceManager.swift */; };
 		27E96D94299093B800360B42 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D93299093B800360B42 /* UserData.swift */; };
 		27E96D9629909D1300360B42 /* AssetLibraryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */; };
 		27E96D982990D56A00360B42 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D972990D56A00360B42 /* Errors.swift */; };
@@ -71,7 +70,6 @@
 		27E96D8C296B6EFF00360B42 /* MainTabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabsView.swift; sourceTree = "<group>"; };
 		27E96D8E296B710E00360B42 /* SessionCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCreationView.swift; sourceTree = "<group>"; };
 		27E96D902987AAE700360B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		27E96D912990910400360B42 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		27E96D93299093B800360B42 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLibraryUtils.swift; sourceTree = "<group>"; };
 		27E96D972990D56A00360B42 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 				27217AAE296ACA510072F0BF /* Persistence.swift */,
 				27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */,
 				27217AAB296ACA510072F0BF /* Preview Content */,
-				27E96D912990910400360B42 /* PersistenceManager.swift */,
 			);
 			path = Casper;
 			sourceTree = "<group>";
@@ -317,7 +314,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				27E96D8B296B6E5D00360B42 /* SettingsView.swift in Sources */,
-				27E96D922990910400360B42 /* PersistenceManager.swift in Sources */,
 				27E96D89296B6E4100360B42 /* FriendsView.swift in Sources */,
 				27217AAF296ACA510072F0BF /* Persistence.swift in Sources */,
 				27E96D9629909D1300360B42 /* AssetLibraryUtils.swift in Sources */,

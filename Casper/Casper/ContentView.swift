@@ -64,7 +64,7 @@ struct ContentView: View {
                         .offset(x: 0, y: -60)
                     
                     Text("DEBUG: has created account? \((userMetadata.first == nil) ? "false" : "true")")
-                    Text("DEBUG: Hello \(userMetadata.first?.firstName ?? "UNKNOWN_USER")")
+                    Text("DEBUG: Hello \((userMetadata.first != nil) ? "\(String(describing: userMetadata.first?.firstName!)) \(String(describing: userMetadata.first?.lastName!))" : "true")")
                     
                     Group {
                         TextField("first Name",
@@ -136,6 +136,7 @@ struct ContentView: View {
                             
                             // Persist the user data.
                             // TODO: The issue with this code is that it basically appends a new user everytime "Sign Up" is clicked. Really, we just want to be replacing this one "main" user. Not sure how to do that yet.
+                            print("SAVING FIRST AND LAST NAME!!!")
                             let user = UserAttributes(context: moc)
                             user.firstName = firstName
                             user.lastName = lastName

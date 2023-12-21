@@ -20,6 +20,14 @@ extension UserAttributes {
     @NSManaged public var lastName: String?
     @NSManaged public var hasSignedUp: Bool
 
+    // TODO: These don't seem to work, make them!
+    public var safeFirstName: String {
+        firstName ?? "UnknownFirstName"
+    }
+    
+    public var safeLastName: String {
+        lastName ?? "UnknownLastName"
+    }
 }
 
 extension UserAttributes : Identifiable {
