@@ -15,6 +15,7 @@ struct MainTabsView: View {
     
     @State private var default_tab = 2
     @StateObject var asset_library_helper = AssetLibraryHelper()
+    let dataManager = UserDataManager()
 
     // Create a timer that fires every 10 seconds. It will actually fire in the background even if the app is not open, so as long as the app is running, this seems like it will still work.
     // TODO: Obviously, if the app gets shut down or crashes, the timer will no longer fire. This is ok for now, but really we eventually want to have a more consistent way of generating background tasks even if the app gets closed.
@@ -40,6 +41,15 @@ struct MainTabsView: View {
             do {
                 try asset_library_helper.fetchAndPossiblyPersistLatestAsset()
                 globalVars.inAppTimerFiredCounter += 1
+                
+//                var photoAsset = PhotoAsset()
+//                photoAsset.xDimension = 77
+//                
+//                dataManager.setLastDetectedAsset(last_detected_asset: photoAsset)
+//                
+//                let secondPhotoAsset = dataManager.getLastDetectedAsset()
+//                print("our retrieved photo asset is: \(secondPhotoAsset.xDimension)")
+                
                 
                 // Increment timerCounter:
                 let stats = fetchedStats.first!

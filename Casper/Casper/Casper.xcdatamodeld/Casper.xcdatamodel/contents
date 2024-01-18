@@ -4,7 +4,11 @@
         <attribute name="pingCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="timerCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
-    <entity name="Metadata" representedClassName="Metadata" syncable="YES"/>
+    <entity name="Metadata" representedClassName="Metadata" syncable="YES">
+        <attribute name="latestReadObjectId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="latestReadObjectTimestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="PhotoLibraryObject" representedClassName="PhotoLibraryObject" syncable="YES" codeGenerationType="class"/>
     <entity name="Statistics" representedClassName="Statistics" syncable="YES">
         <attribute name="pingCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="timerCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>

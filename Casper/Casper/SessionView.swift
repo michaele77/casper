@@ -12,13 +12,16 @@ import BackgroundTasks
 struct SessionView: View {
     @FetchRequest(sortDescriptors: []) var fetchedStats: FetchedResults<Statistics>
     @ObservedObject var globalVars: GlobalVars
+    let dataManager = UserDataManager()
+    // This is assumed to be non-nil by the code (something should always be injected).
+    var assetLibraryHelper: AssetLibraryHelper?
     
     @State private var showNewSessionCreationPage: Bool = false
     @State private var assetMap: [String: Asset] = [:]
-    @State private var shownImage: UIImage = UIImage(systemName: "house")!
+    @AppStorage("last_detected_asset_local_id", store: .standard) var mostRecentAssetLocalId: String = ""
+    @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
     
-    // This is assumed to be non-nil by the code (something should always be injected).
-    var assetLibraryHelper: AssetLibraryHelper?
+    
     
     var body: some View {
         ZStack {
@@ -49,7 +52,7 @@ struct SessionView: View {
                 .font(.custom("Copperplate", size: 20))
                 
                 Button(action: {
-                    shownImage = assetLibraryHelper!.fetchLatestAsset()
+                    shownImage = assetLibraryHelper!.fetchPhotoWithLocalId(localId: dataManager.getLastDetectedAsset().localId)
                 }) {
                     Text("print latest image")
                 }
@@ -60,7 +63,10 @@ struct SessionView: View {
                 Text("DEBUG INFO: [timer counter] --> \(globalVars.inAppTimerFiredCounter)")
                 Text("PERSISTED COUNTERS: [timer counter] --> \(fetchedStats.first!.timerCounter), [times app has launched] --> \(fetchedStats.first!.timesAppHasLaunched)")
                 
-                Image(uiImage: shownImage)
+                Image(uiImage: assetLibraryHelper!.fetchPhotoWithLocalId(localId: dataManager.getLastDetectedAsset().localId))
+                    .resizable()
+                    .frame(width: 100, height: 100) // Set the desired width and height
+                    .scaledToFit() // Maintain the aspect ratio of the image
                 
                 Button(action: {
                     self.showNewSessionCreationPage.toggle()

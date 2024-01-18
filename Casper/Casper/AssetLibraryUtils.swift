@@ -14,30 +14,39 @@ import SwiftUI
 class AssetLibraryHelper: ObservableObject {
     // Public section.
 
+    let dataManager = UserDataManager()
     init() {}
     
     public func fetchAndPossiblyPersistLatestAsset() throws {
         print("timer fired @ \(String(describing: time))")
         // Let's read from the photo library.
-        let asset: Asset? = fetchMetadataForLatestAsset()
-        var assetLibraryMetadata = AssetLibraryMetadata()
-        if asset == nil {
+        guard let asset: PhotoAsset = fetchMetadataForLatestAsset() else {
             throw CasperErrors.readError("Latest asset could not be fetched.")
-        } else {
-            assetLibraryMetadata.last_detected_asset = asset!
-            assetLibraryMetadata.last_modified_time = Date.now
-            assetLibraryMetadata.total_asset_number = -1
-            print("Got a viable asset")
         }
+//        var assetLibraryMetadata = AssetLibraryMetadata()
+//        if asset == nil {
+//            throw CasperErrors.readError("Latest asset could not be fetched.")
+//        }
+//        else {
+//            assetLibraryMetadata.last_detected_asset = asset!
+//            assetLibraryMetadata.last_modified_time = Date.now
+//            assetLibraryMetadata.total_asset_number = -1
+//            print("Got a viable asset")
+//        }
         
 //        try PersistenceManager.shared.write(asset_library_metadata: assetLibraryMetadata)
 
-        print("Persisted asset with creation time of \(assetLibraryMetadata.last_detected_asset.creationTime)")
+        print("Persisted asset with creation time of \(asset.creationTime)")
+        
+        dataManager.setLastDetectedAsset(last_detected_asset: asset)
+        
+        let secondPhotoAsset = dataManager.getLastDetectedAsset()
+        print("double check creation time: \(secondPhotoAsset.creationTime)")
     }
     
-    public func fetchMetadataForLatestAsset() -> Asset? {
+    public func fetchMetadataForLatestAsset() -> PhotoAsset? {
         // Sort the images by descending creation date and fetch the last 10.
-        let imagesToFetch = 10
+        let imagesToFetch = 1
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
         fetchOptions.fetchLimit = imagesToFetch
@@ -53,8 +62,10 @@ class AssetLibraryHelper: ObservableObject {
         if fetchResult.firstObject == nil {
             return nil
         }
+        
+        return convertImageToPhotoAsset(object: fetchResult.firstObject!)
 
-        return convertImageToAsset(object: fetchResult.firstObject!)
+//        return convertImageToAsset(object: fetchResult.firstObject!)
     }
     
     public func readFromPhotoLibrary() -> [String: Asset] {
@@ -190,7 +201,47 @@ class AssetLibraryHelper: ObservableObject {
             return returnImage!
     }
     
+    public func fetchPhotoWithLocalId(localId: String) -> UIImage {
+        // Note that if the request is not set to synchronous
+        // the requestImageForAsset will return both the image
+        // and thumbnail; by setting synchronous to true it
+        // will return just the thumbnail
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        let results = PHAsset.fetchAssets(withLocalIdentifiers: [localId], options: PHFetchOptions())
+        let manager = PHImageManager.default()
+        var returnImage = UIImage()
+        results.enumerateObjects { (thisAsset, _, _) in
+            manager.requestImage(for: thisAsset, targetSize: CGSize(width: 100, height: 100), contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: {(thisImage, _) in
+                print("<<>> --> Image size: \(thisImage!.size)")
+                print("<<>> --> Image scale: \(thisImage!.scale)")
+                returnImage = thisImage!
+            })
+        }
+        return returnImage
+    }
+    
     // Private section.
+    
+    // Helper to unwrap a fetched PHImage into a Casper-friendly Asset struct.
+    private func convertImageToPhotoAsset(object: PHAsset) -> PhotoAsset {
+//        var asset_type: AssetType
+//        switch object.mediaType {
+//        case .image:
+//            asset_type = AssetType.image
+//        case .video:
+//            asset_type = AssetType.video
+//        default:
+//            asset_type = AssetType.unknown
+//        }
+        
+        return PhotoAsset(localId: object.localIdentifier,
+                          type: object.mediaType,
+                          xDimension: object.pixelWidth,
+                          yDimension: object.pixelHeight,
+                          creationTime: object.creationDate ?? Date(timeIntervalSince1970: 0),
+                          duration: object.duration)
+    }
     
     // Helper to unwrap a fetched PHImage into a Casper-friendly Asset struct.
     private func convertImageToAsset(object: PHAsset) -> Asset {
