@@ -14,7 +14,7 @@ import SwiftUI
 class AssetLibraryHelper: ObservableObject {
     // Public section.
 
-    let dataManager = UserDataManager()
+    let imageManager = ImageDataManager()
     init() {}
     
     public func fetchAndPossiblyPersistLatestAsset() throws {
@@ -38,9 +38,9 @@ class AssetLibraryHelper: ObservableObject {
 
         print("Persisted asset with creation time of \(asset.creationTime)")
         
-        dataManager.setLastDetectedAsset(last_detected_asset: asset)
+        imageManager.setLastDetectedAsset(last_detected_asset: asset)
         
-        let secondPhotoAsset = dataManager.getLastDetectedAsset()
+        let secondPhotoAsset = imageManager.getLastDetectedAsset()
         print("double check creation time: \(secondPhotoAsset.creationTime)")
     }
     

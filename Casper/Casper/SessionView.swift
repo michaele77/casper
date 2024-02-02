@@ -12,14 +12,16 @@ import BackgroundTasks
 struct SessionView: View {
     @FetchRequest(sortDescriptors: []) var fetchedStats: FetchedResults<Statistics>
     @ObservedObject var globalVars: GlobalVars
-    let dataManager = UserDataManager()
+    let imageManager = ImageDataManager()
     // This is assumed to be non-nil by the code (something should always be injected).
     var assetLibraryHelper: AssetLibraryHelper?
     
     @State private var showNewSessionCreationPage: Bool = false
     @State private var assetMap: [String: Asset] = [:]
-    @AppStorage("last_detected_asset_local_id", store: .standard) var mostRecentAssetLocalId: String = ""
+    @AppStorage("last_detected_asset_local_id", store: .standard) var mostRecentAssetLocalId: String = "EMPTY"
     @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
+    @AppStorage("stats-timer_counter", store: .standard) var timerCounter: Int = -1
+    @AppStorage("stats-times_app_has_launched", store: .standard) var timesAppHasLaunched: Int = -1
     
     
     
@@ -52,7 +54,7 @@ struct SessionView: View {
                 .font(.custom("Copperplate", size: 20))
                 
                 Button(action: {
-                    shownImage = assetLibraryHelper!.fetchPhotoWithLocalId(localId: dataManager.getLastDetectedAsset().localId)
+                    shownImage = assetLibraryHelper!.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId)
                 }) {
                     Text("print latest image")
                 }
@@ -61,9 +63,9 @@ struct SessionView: View {
                 .font(.custom("Copperplate", size: 20))
                 
                 Text("DEBUG INFO: [timer counter] --> \(globalVars.inAppTimerFiredCounter)")
-                Text("PERSISTED COUNTERS: [timer counter] --> \(fetchedStats.first!.timerCounter), [times app has launched] --> \(fetchedStats.first!.timesAppHasLaunched)")
+                Text("PERSISTED COUNTERS: [timer counter] --> \(timerCounter), [times app has launched] --> \(timesAppHasLaunched)")
                 
-                Image(uiImage: assetLibraryHelper!.fetchPhotoWithLocalId(localId: dataManager.getLastDetectedAsset().localId))
+                Image(uiImage: assetLibraryHelper!.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
                     .resizable()
                     .frame(width: 100, height: 100) // Set the desired width and height
                     .scaledToFit() // Maintain the aspect ratio of the image

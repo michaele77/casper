@@ -37,6 +37,8 @@ struct ContentView: View {
     
     @State private var signIn: Bool = false
     
+    let userDataManager = UserDataManager()
+
     @State var userData = UserInfo(
         firstName: "gFirst",
         lastName: "gLast",
@@ -63,8 +65,13 @@ struct ContentView: View {
                         .foregroundColor(Color(.systemBlue))
                         .offset(x: 0, y: -60)
                     
-                    Text("DEBUG: has created account? \((userMetadata.first == nil) ? "false" : "true")")
-                    Text("DEBUG: Hello \((userMetadata.first != nil) ? "\(String(describing: userMetadata.first?.firstName!)) \(String(describing: userMetadata.first?.lastName!))" : "true")")
+                    Text("DEBUG: has created account? \(userDataManager.hasUserCreatedAccount() ? "false" : "true")")
+                    
+                    Text("DEBUG: Hello \(userDataManager.getFirstName()) \(userDataManager.getLastName())")
+                    Text("DEBUG: first name --> \(userDataManager.getFirstName())")
+                    
+//                    Text("DEBUG: Hello \((userMetadata.first != nil) ? "\(String(describing: userMetadata.first?.firstName!)) \(String(describing: userMetadata.first?.lastName!))" : "true")")
+//                    Text("DEBUG: first name --> \(userDataManager.getFirstName())")
                     
                     Group {
                         TextField("first Name",
@@ -125,23 +132,13 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity)
 
                         }.simultaneousGesture(TapGesture().onEnded{
-                            userData.firstName = firstName
-                            userData.lastName = lastName
-                            userData.email = email
-                            userData.phoneNumber = phoneNumber
-                            userData.password = password
+                            // TODO: Realistically, this sign up flow should be figured out as a temporary page somehow...P2
+                            userDataManager.setFirstName(first_name: firstName)
+                            userDataManager.setLastName(last_name: lastName)
+                            // TODO: Set the rest of the data... currently doing nothing with it
                             print("my datamanager list is long")
                             print("firstName is \(firstName)")
                             print("password is \(password)")
-                            
-                            // Persist the user data.
-                            // TODO: The issue with this code is that it basically appends a new user everytime "Sign Up" is clicked. Really, we just want to be replacing this one "main" user. Not sure how to do that yet.
-                            print("SAVING FIRST AND LAST NAME!!!")
-                            let user = UserAttributes(context: moc)
-                            user.firstName = firstName
-                            user.lastName = lastName
-                            user.hasSignedUp = true
-                            try? moc.save()
                         })
                         
                 }

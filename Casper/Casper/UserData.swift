@@ -162,10 +162,10 @@ class PhotoAsset: NSObject, NSCoding {
 //    }
 //}
 
-class UserDataManager {
-    let prefs = UserDefaults.standard
-    let encoder = JSONEncoder()
-    let decoder = JSONDecoder()
+class ImageDataManager {
+    private let prefs = UserDefaults.standard
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
 
     // last_modified_date_double (Date <--> double)
     func getLastModifiedDate() -> Date {
@@ -197,10 +197,93 @@ class UserDataManager {
         setLastDetectedAssetLocalId(last_detected_asset_local_id: last_detected_asset.localId)
     }
     func getLastDetectedAssetLocalId() -> String {
-        return prefs.string(forKey: "last_detected_asset_local_id")!
+        return prefs.string(forKey: "last_detected_asset_local_id") ?? "NOT_SET!!!"
     }
     func setLastDetectedAssetLocalId(last_detected_asset_local_id: String) {
         prefs.set(last_detected_asset_local_id, forKey: "last_detected_asset_local_id")
+    }
+}
+
+// TODO: Make a .super() class called "DataManager" or something that implements the basic int/string encodings and will initialize these prefs/encoders/decoder things
+class StatsManager {
+    private let stats = UserDefaults.standard
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
+    
+    // stats-times_app_has_launched (Int <--> Int)
+    func incrementTimesAppHasLaunched() {
+        incrementCounter(counter_name: "stats-times_app_has_launched")
+    }
+    func timesAppHasLaunched() -> Int {
+        return stats.integer(forKey: "stats-times_app_has_launched")
+    }
+    
+    // stats-timer_counter (Int <--> Int)
+    func incrementTimerCounter() {
+        incrementCounter(counter_name: "stats-timer_counter")
+    }
+    func timerCounter() -> Int {
+        return stats.integer(forKey: "stats-timer_counter")
+    }
+    
+    // Private funcs:
+    private func incrementCounter(counter_name: String) {
+        stats.set(stats.integer(forKey: counter_name) + 1, forKey: counter_name)
+    }
+}
+
+// Same as the other DataManagers, the only intricacy here is that we may very well read this data before the user has first logged in.
+// Therefore, all returned data will be defaults until the user is created, at which point returned data will be "Real" data.
+// We will not restrict setting new data here (even though we should, eventually).
+// TODO: Consolidate all of the data into an external struct, and save the struct into one userDefault var.
+class UserDataManager {
+    private let userData = UserDefaults.standard
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
+    private var hasCreatedAccount = false
+    
+    init() {
+        print("Starting up!")
+        hasCreatedAccount = userData.bool(forKey: "user_data-has_created_account")
+        print("has created account? \(hasCreatedAccount)")
+    }
+    
+    // user_data-first_name (String <--> String)
+    func getFirstName() -> String {
+        if !hasCreatedAccount {
+            return "NOT_CREATED_ACCOUNT"
+        }
+        return userData.string(forKey: "user_data-first_name") ?? "FIRST_NOONNNEE"
+    }
+    func setFirstName(first_name: String) {
+        markAccountAsCreated()
+        userData.set(first_name, forKey: "user_data-first_name")
+    }
+    
+    // user_data-last_name (String <--> String)
+    func getLastName() -> String {
+        if !hasCreatedAccount {
+            return "NOT_CREATED_ACCOUNT"
+        }
+        return userData.string(forKey: "user_data-last_name") ?? "LAST_NOONNNEE"
+    }
+    func setLastName(last_name: String) {
+        markAccountAsCreated()
+        userData.set(last_name, forKey: "user_data-last_name")
+    }
+    
+    // Returns whether the account has been created yet.
+    func hasUserCreatedAccount() -> Bool {
+        return userData.bool(forKey: "user_data-has_created_account")
+    }
+    
+    // Private funcs:
+    private func markAccountAsCreated() {
+        if hasCreatedAccount {
+            return
+        }
+        userData.set(true, forKey: "user_data-has_created_account")
+        hasCreatedAccount = true
     }
 }
 
