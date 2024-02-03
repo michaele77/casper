@@ -1,22 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23C64" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Debug" representedClassName="Debug" syncable="YES">
-        <attribute name="pingCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="timerCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-    </entity>
-    <entity name="Metadata" representedClassName="Metadata" syncable="YES">
-        <attribute name="latestReadObjectId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="latestReadObjectTimestamp" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-    </entity>
-    <entity name="PhotoLibraryObject" representedClassName="PhotoLibraryObject" syncable="YES" codeGenerationType="class"/>
-    <entity name="Statistics" representedClassName="Statistics" syncable="YES">
-        <attribute name="pingCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="timerCounter" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="timesAppHasLaunched" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-    </entity>
-    <entity name="UserAttributes" representedClassName="UserAttributes" syncable="YES">
-        <attribute name="firstName" optional="YES" attributeType="String"/>
-        <attribute name="hasSignedUp" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="lastName" optional="YES" attributeType="String"/>
-    </entity>
-</model>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23C64" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier=""/>

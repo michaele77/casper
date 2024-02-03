@@ -133,7 +133,6 @@ struct ContentView: View {
                             print("firstName is \(firstName)")
                             print("password is \(password)")
                         })
-                        
                 }
             }
         }

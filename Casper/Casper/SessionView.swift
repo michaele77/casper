@@ -30,7 +30,27 @@ struct SessionView: View {
                 .ignoresSafeArea()
             
             VStack() {
+                
+                // Large red "Kill" button
+                Button(action: {
+                    // Kill the app. Make it quit too so that the user doesn't think it's still running
+                    print("KILLING THE APP BECAUSE THE USER REQUESTED IT!")
+                    exit(-1)
+                }) {
+                    Text("KILL")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                        .frame(width: 200, height: 100)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                }
+                
+                Spacer().frame(height:50)
+                
                 Text("Sessions!")
+                    .foregroundColor(Color(.systemBlue))
+                    .bold(false)
+                    .font(.custom("Copperplate", size: 50))
                 
                 Button(action: {
                     assetMap = assetLibraryHelper!.readFromPhotoLibrary()
@@ -83,7 +103,7 @@ struct SessionView: View {
                 .foregroundColor(Color.white)
                 .background(Color(.systemBlue))
                 .clipShape(Circle())
-                .offset(x:0, y:100)
+                .offset(x:0, y:50)
             }
         }
     }

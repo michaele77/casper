@@ -31,6 +31,10 @@ struct MainTabsView: View {
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }.tag(3)
+            KillView()
+                .tabItem {
+                    Label("KILL", systemImage: "figure.wave.circle.fill")
+                }.tag(4)
         }
         .navigationBarBackButtonHidden(true)
         .onReceive(timer) { time in

@@ -23,14 +23,7 @@
 		27E96D94299093B800360B42 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D93299093B800360B42 /* UserData.swift */; };
 		27E96D9629909D1300360B42 /* AssetLibraryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */; };
 		27E96D982990D56A00360B42 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D972990D56A00360B42 /* Errors.swift */; };
-		E8265A432B304EFF000B012E /* Metadata+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A3B2B304EFF000B012E /* Metadata+CoreDataClass.swift */; };
-		E8265A442B304EFF000B012E /* Metadata+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A3C2B304EFF000B012E /* Metadata+CoreDataProperties.swift */; };
-		E8265A452B304EFF000B012E /* Debug+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A3D2B304EFF000B012E /* Debug+CoreDataClass.swift */; };
-		E8265A462B304EFF000B012E /* Debug+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A3E2B304EFF000B012E /* Debug+CoreDataProperties.swift */; };
-		E8265A472B304EFF000B012E /* UserAttributes+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A3F2B304EFF000B012E /* UserAttributes+CoreDataClass.swift */; };
-		E8265A482B304EFF000B012E /* UserAttributes+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A402B304EFF000B012E /* UserAttributes+CoreDataProperties.swift */; };
-		E8265A4F2B32E73C000B012E /* Statistics+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A4D2B32E73C000B012E /* Statistics+CoreDataClass.swift */; };
-		E8265A502B32E73C000B012E /* Statistics+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8265A4E2B32E73C000B012E /* Statistics+CoreDataProperties.swift */; };
+		E8FF4B832B6E13230031FB0E /* KillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FF4B822B6E13230031FB0E /* KillView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,14 +64,7 @@
 		27E96D93299093B800360B42 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLibraryUtils.swift; sourceTree = "<group>"; };
 		27E96D972990D56A00360B42 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
-		E8265A3B2B304EFF000B012E /* Metadata+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Metadata+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		E8265A3C2B304EFF000B012E /* Metadata+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Metadata+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		E8265A3D2B304EFF000B012E /* Debug+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Debug+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		E8265A3E2B304EFF000B012E /* Debug+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Debug+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		E8265A3F2B304EFF000B012E /* UserAttributes+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAttributes+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		E8265A402B304EFF000B012E /* UserAttributes+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserAttributes+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
-		E8265A4D2B32E73C000B012E /* Statistics+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Statistics+CoreDataClass.swift"; sourceTree = "<group>"; };
-		E8265A4E2B32E73C000B012E /* Statistics+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Statistics+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E8FF4B822B6E13230031FB0E /* KillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KillView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,14 +115,6 @@
 		27217AA4296ACA500072F0BF /* Casper */ = {
 			isa = PBXGroup;
 			children = (
-				E8265A3B2B304EFF000B012E /* Metadata+CoreDataClass.swift */,
-				E8265A3C2B304EFF000B012E /* Metadata+CoreDataProperties.swift */,
-				E8265A3D2B304EFF000B012E /* Debug+CoreDataClass.swift */,
-				E8265A3E2B304EFF000B012E /* Debug+CoreDataProperties.swift */,
-				E8265A3F2B304EFF000B012E /* UserAttributes+CoreDataClass.swift */,
-				E8265A402B304EFF000B012E /* UserAttributes+CoreDataProperties.swift */,
-				E8265A4D2B32E73C000B012E /* Statistics+CoreDataClass.swift */,
-				E8265A4E2B32E73C000B012E /* Statistics+CoreDataProperties.swift */,
 				27E96D902987AAE700360B42 /* Info.plist */,
 				27217AA5296ACA500072F0BF /* CasperApp.swift */,
 				27217AA7296ACA500072F0BF /* ContentView.swift */,
@@ -147,6 +125,7 @@
 				27E96D8E296B710E00360B42 /* SessionCreationView.swift */,
 				27E96D8C296B6EFF00360B42 /* MainTabsView.swift */,
 				27E96D88296B6E4100360B42 /* FriendsView.swift */,
+				E8FF4B822B6E13230031FB0E /* KillView.swift */,
 				27E96D8A296B6E5D00360B42 /* SettingsView.swift */,
 				27217AA9296ACA510072F0BF /* Assets.xcassets */,
 				27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */,
@@ -316,19 +295,12 @@
 				27E96D8F296B710E00360B42 /* SessionCreationView.swift in Sources */,
 				27E96D94299093B800360B42 /* UserData.swift in Sources */,
 				27E96D982990D56A00360B42 /* Errors.swift in Sources */,
-				E8265A482B304EFF000B012E /* UserAttributes+CoreDataProperties.swift in Sources */,
 				27217AD7296B66F10072F0BF /* SessionView.swift in Sources */,
-				E8265A502B32E73C000B012E /* Statistics+CoreDataProperties.swift in Sources */,
 				27217AB2296ACA510072F0BF /* Casper.xcdatamodeld in Sources */,
-				E8265A442B304EFF000B012E /* Metadata+CoreDataProperties.swift in Sources */,
-				E8265A432B304EFF000B012E /* Metadata+CoreDataClass.swift in Sources */,
+				E8FF4B832B6E13230031FB0E /* KillView.swift in Sources */,
 				27217AA8296ACA500072F0BF /* ContentView.swift in Sources */,
 				27217AA6296ACA500072F0BF /* CasperApp.swift in Sources */,
-				E8265A4F2B32E73C000B012E /* Statistics+CoreDataClass.swift in Sources */,
-				E8265A462B304EFF000B012E /* Debug+CoreDataProperties.swift in Sources */,
-				E8265A472B304EFF000B012E /* UserAttributes+CoreDataClass.swift in Sources */,
 				27E96D8D296B6EFF00360B42 /* MainTabsView.swift in Sources */,
-				E8265A452B304EFF000B012E /* Debug+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
