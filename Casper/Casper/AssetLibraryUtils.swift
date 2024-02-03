@@ -23,18 +23,6 @@ class AssetLibraryHelper: ObservableObject {
         guard let asset: PhotoAsset = fetchMetadataForLatestAsset() else {
             throw CasperErrors.readError("Latest asset could not be fetched.")
         }
-//        var assetLibraryMetadata = AssetLibraryMetadata()
-//        if asset == nil {
-//            throw CasperErrors.readError("Latest asset could not be fetched.")
-//        }
-//        else {
-//            assetLibraryMetadata.last_detected_asset = asset!
-//            assetLibraryMetadata.last_modified_time = Date.now
-//            assetLibraryMetadata.total_asset_number = -1
-//            print("Got a viable asset")
-//        }
-        
-//        try PersistenceManager.shared.write(asset_library_metadata: assetLibraryMetadata)
 
         print("Persisted asset with creation time of \(asset.creationTime)")
         
@@ -64,24 +52,19 @@ class AssetLibraryHelper: ObservableObject {
         }
         
         return convertImageToPhotoAsset(object: fetchResult.firstObject!)
-
-//        return convertImageToAsset(object: fetchResult.firstObject!)
     }
     
     public func readFromPhotoLibrary() -> [String: Asset] {
         let semaphore = DispatchSemaphore(value: 0)
         var allSortedAssets: [Asset] = []
         var allAssetMap: [String: Asset] = [:]
-        print("<<0>>")
         PHPhotoLibrary.requestAuthorization { status in
             print(status.rawValue)
-            print("<<1>>")
             if status == .authorized {
                 var counter = 0
                 var image_map: [String: Date] = [:]
                 
                 print("Fetching images....")
-                
                 let assets = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: nil)
                 let pictures =
                 assets.enumerateObjects {
@@ -96,9 +79,6 @@ class AssetLibraryHelper: ObservableObject {
                                           duration: nil)
                     allSortedAssets.append(tempAsset)
                     allAssetMap[tempAsset.localId] = tempAsset
-    //                print(object)
-    //                print("Asset info: x = \(object.pixelWidth), y = \(object.pixelHeight), duration = \(object.duration), creation date = \(object.creationDate)")
-                    
                 }
                 print("Done with images, asset total is \(counter)")
                 
@@ -110,15 +90,10 @@ class AssetLibraryHelper: ObservableObject {
                     counter += 1
                     video_map[object.localIdentifier] = object.creationDate
                 }
-                
-                print("<<2>>")
                 print("Done with videos, asset total is \(counter)")
-                print("<<3>>")
                 semaphore.signal()
             }
             
-            print("<<4>>")
-            print("<<5>>")
             print("now let's sort the assets")
             allSortedAssets.sort(by: { (lhs, rhs) -> Bool in
                 return lhs.creationTime < rhs.creationTime
@@ -225,16 +200,6 @@ class AssetLibraryHelper: ObservableObject {
     
     // Helper to unwrap a fetched PHImage into a Casper-friendly Asset struct.
     private func convertImageToPhotoAsset(object: PHAsset) -> PhotoAsset {
-//        var asset_type: AssetType
-//        switch object.mediaType {
-//        case .image:
-//            asset_type = AssetType.image
-//        case .video:
-//            asset_type = AssetType.video
-//        default:
-//            asset_type = AssetType.unknown
-//        }
-        
         return PhotoAsset(localId: object.localIdentifier,
                           type: object.mediaType,
                           xDimension: object.pixelWidth,

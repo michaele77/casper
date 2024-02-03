@@ -13,19 +13,18 @@ import CoreData
 struct CasperApp: App {
     @Environment(\.scenePhase) private var phase
     // TODO: Get rid of persistance controller, dont need it now with user defaults.
-    let persistenceController = PersistenceController.shared
     let statsManager = StatsManager()
     
     init() {
         // Track how often the app is launched.
-        print("launching...has launched --> \(statsManager.timesAppHasLaunched()) times")
+        print("launching...has launched --> \(statsManager.getTimesAppHasLaunched()) times")
         statsManager.incrementTimesAppHasLaunched()
+        statsManager.resetLocalTimerCounter()
     }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

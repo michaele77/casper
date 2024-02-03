@@ -43,11 +43,6 @@ struct UserPreferences: Hashable, Codable {
     var out_of_app_library_scan_period_seconds: Int = 5
 }
 
-class GlobalVars: ObservableObject {
-    @Published var inAppTimerFiredCounter: Int = 0
-}
-
-
 // NOTE: This is probably not needed, nuke it!
 class PhotoLibraryData: NSObject, NSCoding {
     // This is an array of the last few assets that were scanned out.
@@ -83,12 +78,12 @@ class PhotoAsset: NSObject, NSCoding {
     var duration: TimeInterval
     
     override init() {
-        localId = ""
+        localId = "DEFAULT"
         type = .unknown
         xDimension = -1
         yDimension = -1
         creationTime = Date(timeIntervalSince1970: TimeInterval(0))
-        duration = .zero
+        duration = .infinity
     }
     
     init(localId: String, type: PHAssetMediaType, xDimension: Int, yDimension: Int, creationTime: Date, duration: TimeInterval) {
@@ -127,41 +122,6 @@ class PhotoAsset: NSObject, NSCoding {
     }
 }
 
-//class PhotoAsset: NSObject, NSCoding, Decodable {
-//    var localId: String = ""
-//    var type: PHAssetMediaType = .unknown
-//    var xDimension: Int = -1
-//    var yDimension: Int = -1
-//    var creationTime: Date = Date(timeIntervalSince1970: TimeInterval(0))
-//    var duration: TimeInterval = .zero
-//    
-//    required init(from decoder: Decoder) throws {
-//        localId = decoder.decode(String.self, forKey: "local_id") as? String ?? ""
-//        // The PHAssetMediaType enum is stored as an integer in storage.
-//        let typeInteger = aDecoder.decodeObject(forKey: "type_as_int") as? Int ?? 0
-//        type = PHAssetMediaType(rawValue: typeInteger) ?? .unknown
-//        xDimension = aDecoder.decodeObject(forKey: "x_dimension") as? Int ?? -1
-//        yDimension = aDecoder.decodeObject(forKey: "y_dimension") as? Int ?? -1
-//        // Dates and time intervals are stored as doubles representing seconds since 1970s in storage.
-//        let creationTimeAsDoubleSince1970 = aDecoder.decodeObject(forKey: "creation_time_as_double") as? Double ?? 0.0
-//        creationTime = Date(timeIntervalSince1970: creationTimeAsDoubleSince1970)
-//        let durationAsDouble = aDecoder.decodeObject(forKey: "duration_as_double") as? Double ?? 0.0
-//        duration = TimeInterval(durationAsDouble)
-//    }
-//    
-//    func encode(with aCoder: NSCoder) {
-//        aCoder.encode(localId, forKey: "local_id")
-//        aCoder.encode(xDimension, forKey: "x_dimension")
-//        aCoder.encode(yDimension, forKey: "y_dimension")
-//        let typeAsInt = type.rawValue
-//        aCoder.encode(typeAsInt, forKey: "type_as_int")
-//        let creationTimeAsDouble = Double(creationTime.timeIntervalSince1970)
-//        aCoder.encode(creationTimeAsDouble, forKey: "creation_time_as_double")
-//        let durationAsDouble = Double(duration)
-//        aCoder.encode(durationAsDouble, forKey: "duration_as_double")
-//    }
-//}
-
 class ImageDataManager {
     private let prefs = UserDefaults.standard
     private let encoder = JSONEncoder()
@@ -188,6 +148,10 @@ class ImageDataManager {
     // Calling the top-level setLastDetectedAsset will also call setLastDetectedAssetLocalId.
     func getLastDetectedAsset() -> PhotoAsset {
         let decoded  = prefs.data(forKey: "last_detected_asset")
+        if decoded == nil{
+            print("No such lastDetectedAsset, returning default PhotoAsset")
+            return PhotoAsset()
+        }
         let decodedLastDetectedAsset = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! PhotoAsset
         return decodedLastDetectedAsset
     }
@@ -214,16 +178,36 @@ class StatsManager {
     func incrementTimesAppHasLaunched() {
         incrementCounter(counter_name: "stats-times_app_has_launched")
     }
-    func timesAppHasLaunched() -> Int {
+    func getTimesAppHasLaunched() -> Int {
         return stats.integer(forKey: "stats-times_app_has_launched")
     }
     
+    // This is a global counter, that just keeps incrementing for all times that the timer has went off.
     // stats-timer_counter (Int <--> Int)
     func incrementTimerCounter() {
         incrementCounter(counter_name: "stats-timer_counter")
     }
-    func timerCounter() -> Int {
+    func getTimerCounter() -> Int {
         return stats.integer(forKey: "stats-timer_counter")
+    }
+    
+    // As opposed to stats-timer_counter, this is instead a counter that counts the amount of times the timer has gone off during this time that the app has launched. "Local" here refers to temporal locality, not spatial.
+    // Because we reset this on each launch of the App, a resetter function is very useful.
+    // stats-timer_counter (Int <--> Int)
+    func incrementLocalTimerCounter() {
+        incrementCounter(counter_name: "stats-local_timer_counter")
+    }
+    func getLocalTimerCounter() -> Int {
+        return stats.integer(forKey: "stats-local_timer_counter")
+    }
+    func resetLocalTimerCounter() {
+        stats.set(0, forKey: "stats-local_timer_counter")
+    }
+    
+    // Because both timer counters should be incremented together, have a separate incrementor for that.
+    func incrementAllTimerCounters() {
+        incrementTimerCounter()
+        incrementLocalTimerCounter()
     }
     
     // Private funcs:

@@ -11,7 +11,6 @@
 		27217AA8296ACA500072F0BF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AA7296ACA500072F0BF /* ContentView.swift */; };
 		27217AAA296ACA510072F0BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27217AA9296ACA510072F0BF /* Assets.xcassets */; };
 		27217AAD296ACA510072F0BF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27217AAC296ACA510072F0BF /* Preview Assets.xcassets */; };
-		27217AAF296ACA510072F0BF /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AAE296ACA510072F0BF /* Persistence.swift */; };
 		27217AB2296ACA510072F0BF /* Casper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */; };
 		27217ABC296ACA510072F0BF /* CasperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217ABB296ACA510072F0BF /* CasperTests.swift */; };
 		27217AC6296ACA510072F0BF /* CasperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27217AC5296ACA510072F0BF /* CasperUITests.swift */; };
@@ -57,7 +56,6 @@
 		27217AA7296ACA500072F0BF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		27217AA9296ACA510072F0BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27217AAC296ACA510072F0BF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		27217AAE296ACA510072F0BF /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		27217AB1296ACA510072F0BF /* Casper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Casper.xcdatamodel; sourceTree = "<group>"; };
 		27217AB7296ACA510072F0BF /* CasperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CasperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27217ABB296ACA510072F0BF /* CasperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasperTests.swift; sourceTree = "<group>"; };
@@ -151,7 +149,6 @@
 				27E96D88296B6E4100360B42 /* FriendsView.swift */,
 				27E96D8A296B6E5D00360B42 /* SettingsView.swift */,
 				27217AA9296ACA510072F0BF /* Assets.xcassets */,
-				27217AAE296ACA510072F0BF /* Persistence.swift */,
 				27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */,
 				27217AAB296ACA510072F0BF /* Preview Content */,
 			);
@@ -315,7 +312,6 @@
 			files = (
 				27E96D8B296B6E5D00360B42 /* SettingsView.swift in Sources */,
 				27E96D89296B6E4100360B42 /* FriendsView.swift in Sources */,
-				27217AAF296ACA510072F0BF /* Persistence.swift in Sources */,
 				27E96D9629909D1300360B42 /* AssetLibraryUtils.swift in Sources */,
 				27E96D8F296B710E00360B42 /* SessionCreationView.swift in Sources */,
 				27E96D94299093B800360B42 /* UserData.swift in Sources */,

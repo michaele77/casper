@@ -10,20 +10,19 @@ import Photos
 import BackgroundTasks
 
 struct SessionView: View {
-    @FetchRequest(sortDescriptors: []) var fetchedStats: FetchedResults<Statistics>
-    @ObservedObject var globalVars: GlobalVars
     let imageManager = ImageDataManager()
     // This is assumed to be non-nil by the code (something should always be injected).
     var assetLibraryHelper: AssetLibraryHelper?
+    let statsManager = StatsManager()
     
     @State private var showNewSessionCreationPage: Bool = false
     @State private var assetMap: [String: Asset] = [:]
     @AppStorage("last_detected_asset_local_id", store: .standard) var mostRecentAssetLocalId: String = "EMPTY"
     @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
+    
+    // These need to be bound to AppsStorage to make sure that the view is updated whenever the values are updated.
     @AppStorage("stats-timer_counter", store: .standard) var timerCounter: Int = -1
     @AppStorage("stats-times_app_has_launched", store: .standard) var timesAppHasLaunched: Int = -1
-    
-    
     
     var body: some View {
         ZStack {
@@ -62,7 +61,7 @@ struct SessionView: View {
                 .bold(false)
                 .font(.custom("Copperplate", size: 20))
                 
-                Text("DEBUG INFO: [timer counter] --> \(globalVars.inAppTimerFiredCounter)")
+                Text("PERSISTED COUNTERS: [local timer counter] --> \(statsManager.getLocalTimerCounter())")
                 Text("PERSISTED COUNTERS: [timer counter] --> \(timerCounter), [times app has launched] --> \(timesAppHasLaunched)")
                 
                 Image(uiImage: assetLibraryHelper!.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
@@ -76,7 +75,6 @@ struct SessionView: View {
                     Text("+")
                 }
                 .sheet(isPresented: $showNewSessionCreationPage) {
-                    // Step 4
                     SessionCreationView()
                 }
                 .frame(width: 100, height: 100)
@@ -85,7 +83,7 @@ struct SessionView: View {
                 .foregroundColor(Color.white)
                 .background(Color(.systemBlue))
                 .clipShape(Circle())
-                .offset(x:0, y:250)
+                .offset(x:0, y:100)
             }
         }
     }
@@ -94,6 +92,6 @@ struct SessionView: View {
 struct SessionView_Previews: PreviewProvider {
     static var previews: some View {
         let assetLibraryHelper = AssetLibraryHelper()
-        SessionView(globalVars: GlobalVars(), assetLibraryHelper: assetLibraryHelper)
+        SessionView(assetLibraryHelper: assetLibraryHelper)
     }
 }
