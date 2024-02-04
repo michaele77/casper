@@ -11,8 +11,7 @@ import CoreData
 
 @main
 struct CasperApp: App {
-    @Environment(\.scenePhase) private var phase
-    // TODO: Get rid of persistance controller, dont need it now with user defaults.
+    // DataManagers
     let statsManager = StatsManager()
     
     init() {

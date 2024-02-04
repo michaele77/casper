@@ -10,19 +10,21 @@ import Photos
 import BackgroundTasks
 
 struct SessionView: View {
-    let imageManager = ImageDataManager()
     // This is assumed to be non-nil by the code (something should always be injected).
     var assetLibraryHelper: AssetLibraryHelper?
-    let statsManager = StatsManager()
     
     @State private var showNewSessionCreationPage: Bool = false
     @State private var assetMap: [String: Asset] = [:]
-    @AppStorage("last_detected_asset_local_id", store: .standard) var mostRecentAssetLocalId: String = "EMPTY"
     @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
     
     // These need to be bound to AppsStorage to make sure that the view is updated whenever the values are updated.
-    @AppStorage("stats-timer_counter", store: .standard) var timerCounter: Int = -1
-    @AppStorage("stats-times_app_has_launched", store: .standard) var timesAppHasLaunched: Int = -1
+    @AppStorage(AppConstants.kTimerCounterKey, store: .standard) var timerCounter: Int = -1
+    @AppStorage(AppConstants.kTimesAppHasLaunchedKey, store: .standard) var timesAppHasLaunched: Int = -1
+    @AppStorage(AppConstants.kLastDetectedAsssetLocalIdKey, store: .standard) var mostRecentAssetLocalId: String = "EMPTY"
+    
+    // DataManagers
+    let statsManager = StatsManager()
+    let imageManager = ImageDataManager()
     
     var body: some View {
         ZStack {
@@ -64,25 +66,18 @@ struct SessionView: View {
                 Text("size of assetmap: \(assetMap.count)")
                 
                 Button(action: {
-                    shownImage = assetLibraryHelper!.printSingleAsset(assetMap: assetMap)
-                }) {
-                    Text("print some image")
-                }
-                .foregroundColor(Color.green)
-                .bold(false)
-                .font(.custom("Copperplate", size: 20))
-                
-                Button(action: {
                     shownImage = assetLibraryHelper!.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId)
                 }) {
-                    Text("print latest image")
+                    Text("print latest image with localID of \(imageManager.getLastDetectedAsset().localId)")
                 }
                 .foregroundColor(Color.yellow)
                 .bold(false)
-                .font(.custom("Copperplate", size: 20))
+                .font(.custom("Copperplate", size: 10))
                 
-                Text("PERSISTED COUNTERS: [local timer counter] --> \(statsManager.getLocalTimerCounter())")
-                Text("PERSISTED COUNTERS: [timer counter] --> \(timerCounter), [times app has launched] --> \(timesAppHasLaunched)")
+                Text("[local timer counter] --> \(statsManager.getLocalTimerCounter())")
+                Text(String(format: "(hours elapse from local timer) --> %.2f", statsManager.getElapsedHoursBasedOnLocalCounter()))
+                Text("[timer counter] --> \(timerCounter)")
+                Text("[times app has launched] --> \(timesAppHasLaunched)")
                 
                 Image(uiImage: assetLibraryHelper!.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
                     .resizable()
@@ -111,7 +106,7 @@ struct SessionView: View {
 
 struct SessionView_Previews: PreviewProvider {
     static var previews: some View {
-        let assetLibraryHelper = AssetLibraryHelper()
+        let assetLibraryHelper = AssetLibraryHelper.shared
         SessionView(assetLibraryHelper: assetLibraryHelper)
     }
 }

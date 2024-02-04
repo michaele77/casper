@@ -33,15 +33,15 @@ struct ContentView: View {
     @FocusState private var confirmPasswordIsFocused: Bool
     
     @State private var signIn: Bool = false
-    
-    let userDataManager = UserDataManager()
-
     @State var userData = UserInfo(
         firstName: "gFirst",
         lastName: "gLast",
         email: "gEmail",
         phoneNumber: "gNumber",
         password: "gPass")
+    
+    // DataManagers
+    let userDataManager = UserDataManager()
     
     var body: some View {
         

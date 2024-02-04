@@ -9,6 +9,29 @@
 import Foundation
 import Photos
 
+
+
+class AppParams {
+    // We will be initializing all of the parameters here and hardcoding it.
+    // TODO: Ideally, these parameters should probably either be: 1) fetched from the server and based on the current App version or 2) stored in some other plist or other sort of file so they are centrally located.
+    static public let kTimerPeriodSeconds: Double = 5
+}
+
+class AppConstants {
+    // Define all of the constant user default name mappings here. That way, they wont be spread all over the place in code.
+    static public let kLastDetectedAsssetLocalIdKey: String = "image_manager-last_detected_asset_local_id"
+    static public let kLastModifiedDateDoubleKey: String = "image_manager-last_modified_date_double"
+    static public let kTotalAssetNumberKey: String = "image_manager-total_asset_number"
+    static public let kLastDetetedAssetKey: String = "image_manager-last_detected_asset"
+    static public let kTimesAppHasLaunchedKey : String = "stats-times_app_has_launched"
+    static public let kTimerCounterKey: String = "stats-timer_counter"
+    static public let kLocalTimerCounter: String = "stats-local_timer_counter"
+    static public let kHasCreatedAccountKey : String = "user_data-has_created_account"
+    static public let kFirstNameKey: String = "user_data-first_name"
+    static public let kLastNameKey: String = "user_data-last_name"
+    
+}
+
 enum AssetType: Hashable, Codable {
     case unknown
     case image
@@ -22,51 +45,6 @@ struct Asset: Hashable, Codable {
     var xDimension: Int = -1
     var yDimension: Int = -1
     var duration: TimeInterval?
-}
-
-// Photo library metadata that can be changed quite frequently.
-struct AssetLibraryMetadata: Hashable, Codable {
-    // When the last library scan was done.
-    var last_modified_time: Date = Date(timeIntervalSince1970: 0)
-    // Total number of assets at the given library scan.
-    var total_asset_number: Int = -1
-    // Last detected asset from Photo library scans.
-    var last_detected_asset: Asset = Asset()
-}
-
-// Basic preferences that will be used to control app flow.
-// These are expected to change rarely, most of these should be either constants that are initialized in-file, or vars that can be updated during app initialization, or in other edge-cases (should be described per preference).
-struct UserPreferences: Hashable, Codable {
-    // How often the asset library should be scanned for updated assets when Casper is the focused app, expressed in ms.
-    var in_app_library_scan_period_ms: Int = 1000
-    // How often the asset library should be scanned for updated assets when Casper is not the focused app, expressed in seconds, since it is expected that asset refreshers will take longer running in the background.
-    var out_of_app_library_scan_period_seconds: Int = 5
-}
-
-// NOTE: This is probably not needed, nuke it!
-class PhotoLibraryData: NSObject, NSCoding {
-    // This is an array of the last few assets that were scanned out.
-    var asset_array: Array<Asset>
-    // When the last library scan was done.
-    var last_modified_time: Date = Date(timeIntervalSince1970: 0)
-    // Total number of assets at the given library scan.
-    var total_asset_number: Int = -1
-    // Last detected asset from Photo library scans.
-    var last_detected_asset: Asset = Asset()
-    
-    required init?(coder aDecoder: NSCoder) {
-        asset_array = aDecoder.decodeObject(forKey: "asset_array") as? Array<Asset> ?? Array<Asset>()
-        last_modified_time = aDecoder.decodeObject(forKey: "last_modified_time") as? Date ?? Date(timeIntervalSince1970: 0)
-        total_asset_number = aDecoder.decodeObject(forKey: "total_asset_number") as? Int ?? -1
-        last_detected_asset = aDecoder.decodeObject(forKey: "last_detected_asset") as? Asset ?? Asset()
-    }
-    
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(asset_array, forKey: "asset_array")
-        aCoder.encode(last_modified_time, forKey: "last_modified_time")
-        aCoder.encode(total_asset_number, forKey: "total_asset_number")
-        aCoder.encode(last_detected_asset, forKey: "last_detected_asset")
-    }
 }
 
 class PhotoAsset: NSObject, NSCoding {
@@ -127,27 +105,27 @@ class ImageDataManager {
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
-    // last_modified_date_double (Date <--> double)
+    // kLastModifiedDateDoubleKey (Date <--> double)
     func getLastModifiedDate() -> Date {
-        return Date(timeIntervalSince1970: prefs.double(forKey: "last_modified_date_double"))
+        return Date(timeIntervalSince1970: prefs.double(forKey: AppConstants.kLastModifiedDateDoubleKey))
     }
     func setLastModifiedDate(last_modified_date: Date) {
-        prefs.set(last_modified_date.timeIntervalSince1970, forKey: "last_modified_date_double")
+        prefs.set(last_modified_date.timeIntervalSince1970, forKey: AppConstants.kLastModifiedDateDoubleKey)
     }
     
-    // total_asset_number (int <--> int)
+    // totalAssetNumber (int <--> int)
     func getTotalAssetNumber() -> Int {
-        return prefs.integer(forKey: "last_modified_time")
+        return prefs.integer(forKey: AppConstants.kTotalAssetNumberKey)
     }
-    func setTotalAssetNumber(total_asset_number: Int) {
-        prefs.set(total_asset_number, forKey: "last_modified_time")
+    func setTotalAssetNumber(totalAssetNumber: Int) {
+        prefs.set(totalAssetNumber, forKey: AppConstants.kTotalAssetNumberKey)
     }
     
-    // last_detected_asset (PhotoAsset <--> PhotoAsset)
+    // lastDetectedAsset (PhotoAsset <--> PhotoAsset)
     // This includes a convenience store: the PhotoAsset.localId string
     // Calling the top-level setLastDetectedAsset will also call setLastDetectedAssetLocalId.
     func getLastDetectedAsset() -> PhotoAsset {
-        let decoded  = prefs.data(forKey: "last_detected_asset")
+        let decoded  = prefs.data(forKey: AppConstants.kLastDetetedAssetKey)
         if decoded == nil{
             print("No such lastDetectedAsset, returning default PhotoAsset")
             return PhotoAsset()
@@ -155,16 +133,16 @@ class ImageDataManager {
         let decodedLastDetectedAsset = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! PhotoAsset
         return decodedLastDetectedAsset
     }
-    func setLastDetectedAsset(last_detected_asset: PhotoAsset) {
-        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: last_detected_asset)
-        prefs.set(encodedData, forKey: "last_detected_asset")
-        setLastDetectedAssetLocalId(last_detected_asset_local_id: last_detected_asset.localId)
+    func setLastDetectedAsset(lastDetectedAsset: PhotoAsset) {
+        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: lastDetectedAsset)
+        prefs.set(encodedData, forKey: AppConstants.kLastDetetedAssetKey)
+        setLastDetectedAssetLocalId(lastDetectedAsssetLocalId: lastDetectedAsset.localId)
     }
     func getLastDetectedAssetLocalId() -> String {
-        return prefs.string(forKey: "last_detected_asset_local_id") ?? "NOT_SET!!!"
+        return prefs.string(forKey: AppConstants.kLastDetectedAsssetLocalIdKey) ?? "NOT_SET!!!"
     }
-    func setLastDetectedAssetLocalId(last_detected_asset_local_id: String) {
-        prefs.set(last_detected_asset_local_id, forKey: "last_detected_asset_local_id")
+    func setLastDetectedAssetLocalId(lastDetectedAsssetLocalId: String) {
+        prefs.set(lastDetectedAsssetLocalId, forKey: AppConstants.kLastDetectedAsssetLocalIdKey)
     }
 }
 
@@ -176,32 +154,35 @@ class StatsManager {
     
     // stats-times_app_has_launched (Int <--> Int)
     func incrementTimesAppHasLaunched() {
-        incrementCounter(counter_name: "stats-times_app_has_launched")
+        incrementCounter(counter_name: AppConstants.kTimesAppHasLaunchedKey)
     }
     func getTimesAppHasLaunched() -> Int {
-        return stats.integer(forKey: "stats-times_app_has_launched")
+        return stats.integer(forKey: AppConstants.kTimesAppHasLaunchedKey)
     }
     
     // This is a global counter, that just keeps incrementing for all times that the timer has went off.
     // stats-timer_counter (Int <--> Int)
     func incrementTimerCounter() {
-        incrementCounter(counter_name: "stats-timer_counter")
+        incrementCounter(counter_name: AppConstants.kTimerCounterKey)
     }
     func getTimerCounter() -> Int {
-        return stats.integer(forKey: "stats-timer_counter")
+        return stats.integer(forKey: AppConstants.kTimerCounterKey)
     }
     
     // As opposed to stats-timer_counter, this is instead a counter that counts the amount of times the timer has gone off during this time that the app has launched. "Local" here refers to temporal locality, not spatial.
     // Because we reset this on each launch of the App, a resetter function is very useful.
     // stats-timer_counter (Int <--> Int)
     func incrementLocalTimerCounter() {
-        incrementCounter(counter_name: "stats-local_timer_counter")
+        incrementCounter(counter_name: AppConstants.kLocalTimerCounter)
     }
     func getLocalTimerCounter() -> Int {
-        return stats.integer(forKey: "stats-local_timer_counter")
+        return stats.integer(forKey: AppConstants.kLocalTimerCounter)
     }
     func resetLocalTimerCounter() {
-        stats.set(0, forKey: "stats-local_timer_counter")
+        stats.set(0, forKey: AppConstants.kLocalTimerCounter)
+    }
+    func getElapsedHoursBasedOnLocalCounter() -> Double {
+        return Double(getLocalTimerCounter()) * AppParams.kTimerPeriodSeconds / 3600
     }
     
     // Because both timer counters should be incremented together, have a separate incrementor for that.
@@ -228,7 +209,7 @@ class UserDataManager {
     
     init() {
         print("Starting up!")
-        hasCreatedAccount = userData.bool(forKey: "user_data-has_created_account")
+        hasCreatedAccount = userData.bool(forKey: AppConstants.kHasCreatedAccountKey)
         print("has created account? \(hasCreatedAccount)")
     }
     
@@ -237,11 +218,11 @@ class UserDataManager {
         if !hasCreatedAccount {
             return "NOT_CREATED_ACCOUNT"
         }
-        return userData.string(forKey: "user_data-first_name") ?? "FIRST_NOONNNEE"
+        return userData.string(forKey: AppConstants.kFirstNameKey) ?? "FIRST_NOONNNEE"
     }
     func setFirstName(first_name: String) {
         markAccountAsCreated()
-        userData.set(first_name, forKey: "user_data-first_name")
+        userData.set(first_name, forKey: AppConstants.kFirstNameKey)
     }
     
     // user_data-last_name (String <--> String)
@@ -249,16 +230,16 @@ class UserDataManager {
         if !hasCreatedAccount {
             return "NOT_CREATED_ACCOUNT"
         }
-        return userData.string(forKey: "user_data-last_name") ?? "LAST_NOONNNEE"
+        return userData.string(forKey: AppConstants.kLastNameKey) ?? "LAST_NOONNNEE"
     }
     func setLastName(last_name: String) {
         markAccountAsCreated()
-        userData.set(last_name, forKey: "user_data-last_name")
+        userData.set(last_name, forKey: AppConstants.kLastNameKey)
     }
     
     // Returns whether the account has been created yet.
     func hasUserCreatedAccount() -> Bool {
-        return userData.bool(forKey: "user_data-has_created_account")
+        return userData.bool(forKey: AppConstants.kHasCreatedAccountKey)
     }
     
     // Private funcs:
@@ -266,8 +247,7 @@ class UserDataManager {
         if hasCreatedAccount {
             return
         }
-        userData.set(true, forKey: "user_data-has_created_account")
+        userData.set(true, forKey: AppConstants.kHasCreatedAccountKey)
         hasCreatedAccount = true
     }
 }
-
