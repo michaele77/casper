@@ -13,13 +13,13 @@ import SwiftUI
 // This is a stateless class to help retrieve stored photos and videos. Prefer to use the static singleton.
 class AssetLibraryHelper: ObservableObject {
     static let shared = AssetLibraryHelper()
+    // Private initializer to prevent creating multiple instances
+    private init() {}
 
     // DataManagers
     let imageManager = ImageDataManager()
+    let queueManager = ProcessingQueueManager.shared
 
-    // Private initializer to prevent creating multiple instances
-    private init() {}
-    
     public func fetchAndPersistLatestAsset() throws {
         print("timer fired @ \(String(describing: time))")
         // Let's read from the photo library.
@@ -29,6 +29,71 @@ class AssetLibraryHelper: ObservableObject {
 
         print("Persisted asset with creation time of \(asset.creationTime)")
         imageManager.setLastDetectedAsset(lastDetectedAsset: asset)
+    }
+    
+    // This function scans through the latest until one of the following conditions are met:
+    // 1) One of the IDs are the kLastDetetedAssetKey
+//    public func scanThroughLatestAssets() throws {
+//        
+//    }
+    
+    // TODO: MASSIVE BUG -- This does not support looking at DELETED photos. So if someone deletes a photo all bets are off. Pretty massive bug lol but there are ways around it, just increases the scope and complexity here quite a bit.
+    // Function to scan the photo library, detect new photo assets, then add them to the processing queue in storage.
+    public func addNewImagesToQueue() throws {
+        let currentNumberOfAssets = fetchTotalNumberOfAssets()
+        let previousNumberOfAssets = imageManager.getTotalAssetNumber()
+        if currentNumberOfAssets <= previousNumberOfAssets {
+            if currentNumberOfAssets == previousNumberOfAssets {
+                print("<<ASSET_LIBRARY_UTILS>> No new assets! Do nothing.")
+                return
+            } else {
+                print("<<ASSET_LIBRARY_UTILS>> We lost assets! This case is not handled, do nothing EXCEPT for resetting number of total assets in storage.")
+                imageManager.setTotalAssetNumber(totalAssetNumber: currentNumberOfAssets)
+                return
+            }
+        }
+
+        // If we are here, we must have new assets. Fetch them and remember to persist the number of assets read.
+        let numberOfNewAssets = currentNumberOfAssets - previousNumberOfAssets
+        let fetchedAssets = try fetchMetadataForNLastestAssets(numberOfNewAssets: numberOfNewAssets)
+        
+        print("<<ASSET_LIBRARY_UTILS>> Do Enqueing logic here!!")
+        queueManager.enqueue(newAssets: fetchedAssets)
+        
+        imageManager.setTotalAssetNumber(totalAssetNumber: currentNumberOfAssets)
+    }
+    
+    public func fetchTotalNumberOfAssets() -> Int {
+        // Request authorization to access photos
+        var photoCount = 0
+        var hasRequestFinished = false
+        print("<<1>>")
+        PHPhotoLibrary.requestAuthorization { status in
+            if status == .authorized {
+                print("<<2>>")
+                // Access to photos is granted
+                
+                // Fetch all photos from the camera roll
+                let fetchOptions = PHFetchOptions()
+                let allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+                
+                // Get the count of photos
+                photoCount = allPhotos.count
+                
+                // Print or use the photo count as needed
+                print("Number of photos: \(photoCount)")
+                print("<<3>>")
+                hasRequestFinished = true
+            } else {
+                // Access to photos is not granted
+                print("Access to photos is not authorized.")
+                hasRequestFinished = true
+            }
+        }
+        
+        while !hasRequestFinished { }
+        print("<<4>> photos: \(photoCount)")
+        return photoCount
     }
     
     public func fetchMetadataForLatestAsset() -> PhotoAsset? {
@@ -52,7 +117,33 @@ class AssetLibraryHelper: ObservableObject {
         
         return PHAssetToPhotoAsset(object: fetchResult.firstObject!)
     }
-    
+
+    public func fetchMetadataForNLastestAssets(numberOfNewAssets: Int) throws -> [PhotoAsset] {
+        // Sort the images by descending creation date and fetch the last 10.
+        // TODO: This does not fetch live photos, as far as i am aware. Will need to fix that.
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+        fetchOptions.fetchLimit = numberOfNewAssets
+        fetchOptions.predicate = NSPredicate(format: "mediaType = %d OR mediaType = %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
+
+        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+
+        // If the fetch result is less than expected, return with an error.
+        if fetchResult.count != numberOfNewAssets {
+            throw CasperErrors.readError("Unexpected number of assets fetched, expected \(numberOfNewAssets) but only got \(fetchResult.count).")
+        }
+        
+        var fetchedAssetArray: [PhotoAsset] = []
+
+        // Loop through the fetched assets
+            for index in 0 ..< fetchResult.count {
+                print("<<ASSET_LIBRARY_UTILS>> Fetch latest N assets: at index - \(index) - ")
+                fetchedAssetArray.append(PHAssetToPhotoAsset(object: fetchResult[index]))
+            }
+        
+        return fetchedAssetArray
+    }
+
     public func readFromPhotoLibrary() -> [String: Asset] {
         let semaphore = DispatchSemaphore(value: 0)
         var allSortedAssets: [Asset] = []
@@ -147,11 +238,12 @@ class AssetLibraryHelper: ObservableObject {
         // will return just the thumbnail
         let requestOptions = PHImageRequestOptions()
         requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = true
         let results = PHAsset.fetchAssets(withLocalIdentifiers: [localId], options: PHFetchOptions())
         let manager = PHImageManager.default()
         var returnImage = UIImage()
         results.enumerateObjects { (thisAsset, _, _) in
-            manager.requestImage(for: thisAsset, targetSize: CGSize(width: 100, height: 100), contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: {(thisImage, _) in
+            manager.requestImage(for: thisAsset, targetSize: PHImageManagerMaximumSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: {(thisImage, _) in
                 print("<<>> --> Image size: \(thisImage!.size)")
                 print("<<>> --> Image scale: \(thisImage!.scale)")
                 returnImage = thisImage!

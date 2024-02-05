@@ -26,7 +26,7 @@ struct MainTabsView: View {
                 .tabItem {
                     Label("Friends", systemImage: "person.3.sequence.fill")
                 }.tag(1)
-            SessionView(assetLibraryHelper: asset_library_helper)
+            SessionView()
                 .tabItem {
                     Label("Sessions", systemImage: "network")
                 }.tag(2)
@@ -41,11 +41,18 @@ struct MainTabsView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onReceive(timer) { time in
+            statsManager.incrementAllTimerCounters()
+            // TODO: We can probably get rid of the fetchAndPersistLatestAsset bit now...
             do {
                 try AssetLibraryHelper.shared.fetchAndPersistLatestAsset()
-                statsManager.incrementAllTimerCounters()
             } catch {
                 print("Error occured in fetchAndPossiblyPersistLatestAsset: \(error.localizedDescription)")
+            }
+            
+            do {
+                try AssetLibraryHelper.shared.addNewImagesToQueue()
+            } catch {
+                print("Error occured in addNewImagesToQueue: \(error.localizedDescription)")
             }
                 
         }

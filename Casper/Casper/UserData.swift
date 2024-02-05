@@ -14,7 +14,16 @@ import Photos
 class AppParams {
     // We will be initializing all of the parameters here and hardcoding it.
     // TODO: Ideally, these parameters should probably either be: 1) fetched from the server and based on the current App version or 2) stored in some other plist or other sort of file so they are centrally located.
+    // Timer periodicity in seconds.
     static public let kTimerPeriodSeconds: Double = 5
+    // Number of assets to scan back per scanning trip.
+    static public let kScanLastNAssets: Int = 10
+    // Maximum number of assets to scan back to. Anything before this will not be considered by the App.
+    static public let kMaxAssetsToScan: Int = 100
+    // Asset dequeue periodicity. This basically defines the asset upload rate.
+    // A periodicity of 10s --> 360 assets uploaded per hour.
+    // A peruodicity of 1s --> 3600 assets uploaded per hour.
+    static public let kQueueProcessingPeriodicitySeconds: Double = 2
 }
 
 class AppConstants {
@@ -29,7 +38,7 @@ class AppConstants {
     static public let kHasCreatedAccountKey : String = "user_data-has_created_account"
     static public let kFirstNameKey: String = "user_data-first_name"
     static public let kLastNameKey: String = "user_data-last_name"
-    
+    static public let kProcessingQueueKey: String = "data-processing_queue"
 }
 
 enum AssetType: Hashable, Codable {
@@ -54,9 +63,10 @@ class PhotoAsset: NSObject, NSCoding {
     var yDimension: Int
     var creationTime: Date
     var duration: TimeInterval
+    static private let kDefaultId = "DEFAULT_ID"
     
     override init() {
-        localId = "DEFAULT"
+        localId = PhotoAsset.kDefaultId
         type = .unknown
         xDimension = -1
         yDimension = -1
@@ -97,6 +107,13 @@ class PhotoAsset: NSObject, NSCoding {
         aCoder.encode(creationTimeAsDouble, forKey: "creation_time_as_double")
         let durationAsDouble = Double(duration)
         aCoder.encode(durationAsDouble, forKey: "duration_as_double")
+    }
+    
+    func isDefault() -> Bool {
+        if self.localId == PhotoAsset.kDefaultId {
+            return true
+        }
+        return false
     }
 }
 
@@ -149,8 +166,6 @@ class ImageDataManager {
 // TODO: Make a .super() class called "DataManager" or something that implements the basic int/string encodings and will initialize these prefs/encoders/decoder things
 class StatsManager {
     private let stats = UserDefaults.standard
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
     
     // stats-times_app_has_launched (Int <--> Int)
     func incrementTimesAppHasLaunched() {
@@ -249,5 +264,84 @@ class UserDataManager {
         }
         userData.set(true, forKey: AppConstants.kHasCreatedAccountKey)
         hasCreatedAccount = true
+    }
+}
+
+// This class manages the asset queue. This class attempts to make a thread-safe interface layer between a UserDefault array in persistance and what appears to be a queue externally.
+class ProcessingQueueManager {
+    static let shared = ProcessingQueueManager()
+    // Private initializer to prevent creating multiple instances
+    private init() {}
+
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
+    private let queueLock = NSLock()
+    
+    private let storage = UserDefaults.standard
+    
+//    private var semaphore = false
+    private var lockTimeMicros = 0
+    private let lockTimeoutSeconds = 10
+    private var assetArray: [PhotoAsset] = []
+
+    // Enqueues the input array of PhotoAssets.
+    func enqueue(newAssets: [PhotoAsset]) {
+        print("<<USER_DATA>> VV_LOCKING_VV")
+        queueLock.lock()
+        writeQueueToStorage(queue: getQueueFromStorage() + newAssets)
+        queueLock.unlock()
+        print("<<USER_DATA>> VV_UNLOCKED_VV")
+    }
+    
+    // Dequeues the first asset from the processing queue and returns it.
+    // If the queue has nothing to dequeue, a default asset is returned.
+    func dequeue() -> PhotoAsset {
+        print("<<USER_DATA>> VV_LOCKING_VV")
+        queueLock.lock()
+        // Load current array representing the queue and remove the first asset.
+        var currentAssets = getQueueFromStorage()
+        if currentAssets.count == 0 {
+            queueLock.unlock()
+            print("<<USER_DATA>> VV_UNLOCKED_VV")
+            return PhotoAsset()
+        }
+        let firstAsset = currentAssets.removeFirst()
+
+        // Write the new combined array to storage.
+        writeQueueToStorage(queue: currentAssets)
+        queueLock.unlock()
+        print("<<USER_DATA>> VV_UNLOCKED_VV")
+
+        // Return the removed asset.
+        return firstAsset
+    }
+    
+    // Returns the size of the queue in storage.
+    func size() -> Int {
+        let currentAssets = storage.array(forKey: AppConstants.kProcessingQueueKey) as? [PhotoAsset] ?? []
+        return currentAssets.count
+    }
+
+    // Get the array representing the queue and return it.
+    // If it doesn't exist, return an empty array.
+    private func getQueueFromStorage() -> [PhotoAsset] {
+        print("<<USER_DATA>> -->>>>  GETTING QUEUE!")
+        let currentArray = storage.array(forKey: ) as? [PhotoAsset] ?? []
+        
+        let decoded  = storage.data(forKey: AppConstants.kProcessingQueueKey)
+        if decoded == nil {
+            print("<<USER_DATA>> No processing queue, returning an empty array")
+            return []
+        }
+        let queue = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! [PhotoAsset]
+        print("<<USER_DATA>>        - queue size: \(queue.count)")
+        return queue
+    }
+    
+    private func writeQueueToStorage(queue: [PhotoAsset]) {
+        print("<<USER_DATA>> <<<<<-- RETURNING QUEUE!")
+        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: queue)
+        storage.set(encodedData, forKey: AppConstants.kProcessingQueueKey)
+        print("<<USER_DATA>>        - queue size: \(queue.count)")
     }
 }

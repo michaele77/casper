@@ -10,9 +10,6 @@ import Photos
 import BackgroundTasks
 
 struct SessionView: View {
-    // This is assumed to be non-nil by the code (something should always be injected).
-    var assetLibraryHelper: AssetLibraryHelper?
-    
     @State private var showNewSessionCreationPage: Bool = false
     @State private var assetMap: [String: Asset] = [:]
     @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
@@ -55,7 +52,16 @@ struct SessionView: View {
                     .font(.custom("Copperplate", size: 50))
                 
                 Button(action: {
-                    assetMap = assetLibraryHelper!.readFromPhotoLibrary()
+                    AssetLibraryHelper.shared.fetchTotalNumberOfAssets()
+                }) {
+                    Text("get size")
+                }
+                .foregroundColor(Color.green)
+                .bold(true)
+                .font(.custom("Copperplate", size: 20))
+                
+                Button(action: {
+                    assetMap = AssetLibraryHelper.shared.readFromPhotoLibrary()
                 }) {
                     Text("read photo library + print it")
                 }
@@ -66,7 +72,7 @@ struct SessionView: View {
                 Text("size of assetmap: \(assetMap.count)")
                 
                 Button(action: {
-                    shownImage = assetLibraryHelper!.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId)
+                    shownImage = AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId)
                 }) {
                     Text("print latest image with localID of \(imageManager.getLastDetectedAsset().localId)")
                 }
@@ -79,9 +85,9 @@ struct SessionView: View {
                 Text("[timer counter] --> \(timerCounter)")
                 Text("[times app has launched] --> \(timesAppHasLaunched)")
                 
-                Image(uiImage: assetLibraryHelper!.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
+                Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
                     .resizable()
-                    .frame(width: 100, height: 100) // Set the desired width and height
+                    .frame(width: 200, height: 200) // Set the desired width and height
                     .scaledToFit() // Maintain the aspect ratio of the image
                 
                 Button(action: {
@@ -106,7 +112,6 @@ struct SessionView: View {
 
 struct SessionView_Previews: PreviewProvider {
     static var previews: some View {
-        let assetLibraryHelper = AssetLibraryHelper.shared
-        SessionView(assetLibraryHelper: assetLibraryHelper)
+        SessionView()
     }
 }
