@@ -32,37 +32,10 @@ struct CasperApp: App {
         print("<<CasperApp>> launching...has launched --> \(statsManager.getTimesAppHasLaunched()) times")
     }
     
-    // TODO: This function will inevitably lead to stack overflow...make it iterative.
-    private func recursiveBackgroundQueueProcessor() {
-        print("<<QUEUE_PROCESSOR>> BackgroundProcessor starting.")
-        let asset = ProcessingQueueManager.shared.dequeue()
-        if asset.isDefault() {
-            print("<<QUEUE_PROCESSOR>> No new assets to process!")
-        } else {
-            print("<<QUEUE_PROCESSOR>> dequeued asset with localID of \(asset.localId)")
-            print("<<QUEUE_PROCESSOR>> sending request to server...")
-            // TODO: Obviously, replace this for a stub to the real server.
-            // SIMULATING A REQUEST TO SERVER, TAKES SOME RANDOM AMOUNT OF TIME
-            Thread.sleep(forTimeInterval: Double.random(in: 0.5..<5))
-            print("<<QUEUE_PROCESSOR>> request sent!")
-        }
-        
-        
-        DispatchQueue.global().async {
-            // Call the function recursively after some delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + AppParams.kQueueProcessingPeriodicitySeconds) {
-                recursiveBackgroundQueueProcessor()
-            }
-        }
-        
-    }
-    
     init() {
         setupDefaultStatesForFirstLaunch()
         incrementStartupCounters()
-        print("<<CasperApp>> BEFORE tasks)")
-        recursiveBackgroundQueueProcessor()
-        print("<<CasperApp>> AFTER tasks)")
+        QueueProcessors.shared.launchAsyncTasks()
     }
     
     var body: some Scene {

@@ -18,7 +18,7 @@ struct SessionView: View {
     @AppStorage(AppConstants.kTimerCounterKey, store: .standard) var timerCounter: Int = -1
     @AppStorage(AppConstants.kTimesAppHasLaunchedKey, store: .standard) var timesAppHasLaunched: Int = -1
     @AppStorage(AppConstants.kLastDetectedAsssetLocalIdKey, store: .standard) var mostRecentAssetLocalId: String = "EMPTY"
-    
+        
     // DataManagers
     let statsManager = StatsManager()
     let imageManager = ImageDataManager()

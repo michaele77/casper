@@ -31,12 +31,6 @@ class AssetLibraryHelper: ObservableObject {
         imageManager.setLastDetectedAsset(lastDetectedAsset: asset)
     }
     
-    // This function scans through the latest until one of the following conditions are met:
-    // 1) One of the IDs are the kLastDetetedAssetKey
-//    public func scanThroughLatestAssets() throws {
-//        
-//    }
-    
     // TODO: MASSIVE BUG -- This does not support looking at DELETED photos. So if someone deletes a photo all bets are off. Pretty massive bug lol but there are ways around it, just increases the scope and complexity here quite a bit.
     // Function to scan the photo library, detect new photo assets, then add them to the processing queue in storage.
     public func addNewImagesToQueue() throws {
