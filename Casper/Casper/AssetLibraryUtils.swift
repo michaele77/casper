@@ -18,7 +18,6 @@ class AssetLibraryHelper: ObservableObject {
 
     // DataManagers
     let imageManager = ImageDataManager()
-    let queueManager = ProcessingQueueManager.shared
 
     public func fetchAndPersistLatestAsset() throws {
         print("timer fired @ \(String(describing: time))")
@@ -31,42 +30,48 @@ class AssetLibraryHelper: ObservableObject {
         imageManager.setLastDetectedAsset(lastDetectedAsset: asset)
     }
     
-    // TODO: MASSIVE BUG -- This does not support looking at DELETED photos. So if someone deletes a photo all bets are off. Pretty massive bug lol but there are ways around it, just increases the scope and complexity here quite a bit.
     // Function to scan the photo library, detect new photo assets, then add them to the processing queue in storage.
-    public func addNewImagesToQueue() throws {
-        let currentNumberOfAssets = fetchTotalNumberOfAssets()
-        let previousNumberOfAssets = imageManager.getTotalAssetNumber()
-        if currentNumberOfAssets <= previousNumberOfAssets {
-            if currentNumberOfAssets == previousNumberOfAssets {
-                print("<<ASSET_LIBRARY_UTILS>> No new assets! Do nothing.")
-                return
-            } else {
-                print("<<ASSET_LIBRARY_UTILS>> We lost assets! This case is not handled, do nothing EXCEPT for resetting number of total assets in storage.")
-                imageManager.setTotalAssetNumber(totalAssetNumber: currentNumberOfAssets)
-                return
-            }
+    public func scanAndEnqueueNewAssets() throws {
+        // 1) Retreieve the localIDs for the N last images, sorted by *creationTime*, call is currBuffer.
+        // 2) Read back the prevBuffer from storage.
+        // 3) Do a diff of the N images; we are only interested in any new images in the  buffer. NOTE: The 2 buffers can be of different length!
+        // 4) (optional) can check the total asset number as well. If this doesn't match what we expect, then we can log it, but there's not much we can do; it just means photos were deleted beyond the "horizon" of our scan. After all, someone can delete the first photo out of 100k assets, we would have a mismatch, but we don't really care.
+        // 5) Persist currBuffer
+        // 6) Enqueue the new assets into the processingQueue
+        // NOTE: the above procedure gets us a nice property: Photos taken by the iphone will show up at the top. I *think* that airdropped photos will also have a new creationTime corresponding to when they were recieved on the device, but this may be wrong. Either way, this sort of sorting actually favors the app's functionality EVEN IF airdropped photos keep their old creationTime.
+        // TODO: Confirm this functionalility with airdropped photos! Either way, probably not a huge deal (given the reasoning above).
+        
+        // 1)
+        let assetBuffer: [PhotoAsset] = try fetchMetadataForNLastestAssets(numberOfAssetsToFetch: AppParams.kMaxAssetsToScan)
+        
+        // 2)
+        var prevAssetBuffer: [PhotoAsset] = imageManager.getAssetBuffer()
+        
+        // 3)
+        var newAssets: [PhotoAsset] = try! diffOldAndNewAssetBuffers(oldBuffer: prevAssetBuffer, newBuffer: assetBuffer)
+        
+        // 4) TODO: Implement this optional check? Maybe?
+        
+        // Early out if no difference.
+        if newAssets.isEmpty {
+            print("<<ASSET_LIBRARY_UTILS>> -- <<SCANNER>> No difference detected, continuing...")
+            return
         }
-
-        // If we are here, we must have new assets. Fetch them and remember to persist the number of assets read.
-        let numberOfNewAssets = currentNumberOfAssets - previousNumberOfAssets
-        let fetchedAssets = try fetchMetadataForNLastestAssets(numberOfNewAssets: numberOfNewAssets)
         
-        print("<<ASSET_LIBRARY_UTILS>> Do Enqueing logic here!!")
-        queueManager.enqueue(newAssets: fetchedAssets)
+        // 5)
+        imageManager.setAssetBuffer(assetBuffer: assetBuffer)
         
-        imageManager.setTotalAssetNumber(totalAssetNumber: currentNumberOfAssets)
+        // 6)
+        print("<<ASSET_LIBRARY_UTILS>> Do Enqueing \(newAssets.count) more assets!")
+        ProcessingQueue.shared.enqueue(newAssets: newAssets)
     }
     
     public func fetchTotalNumberOfAssets() -> Int {
         // Request authorization to access photos
         var photoCount = 0
         var hasRequestFinished = false
-        print("<<1>>")
         PHPhotoLibrary.requestAuthorization { status in
             if status == .authorized {
-                print("<<2>>")
-                // Access to photos is granted
-                
                 // Fetch all photos from the camera roll
                 let fetchOptions = PHFetchOptions()
                 let allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
@@ -75,18 +80,17 @@ class AssetLibraryHelper: ObservableObject {
                 photoCount = allPhotos.count
                 
                 // Print or use the photo count as needed
-                print("Number of photos: \(photoCount)")
-                print("<<3>>")
+                print("<<ASSET_LIBRARY_UTILS>> Total Number of photos: \(photoCount)")
                 hasRequestFinished = true
             } else {
                 // Access to photos is not granted
-                print("Access to photos is not authorized.")
+                print("<<ASSET_LIBRARY_UTILS>> Access to photos is not authorized.")
                 hasRequestFinished = true
             }
         }
-        
+
+        // Block execution until the async fetch request has finished.
         while !hasRequestFinished { }
-        print("<<4>> photos: \(photoCount)")
         return photoCount
     }
     
@@ -112,28 +116,32 @@ class AssetLibraryHelper: ObservableObject {
         return PHAssetToPhotoAsset(object: fetchResult.firstObject!)
     }
 
-    public func fetchMetadataForNLastestAssets(numberOfNewAssets: Int) throws -> [PhotoAsset] {
+    public func fetchMetadataForNLastestAssets(numberOfAssetsToFetch: Int) throws -> [PhotoAsset] {
         // Sort the images by descending creation date and fetch the last 10.
         // TODO: This does not fetch live photos, as far as i am aware. Will need to fix that.
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
-        fetchOptions.fetchLimit = numberOfNewAssets
+        fetchOptions.fetchLimit = numberOfAssetsToFetch
         fetchOptions.predicate = NSPredicate(format: "mediaType = %d OR mediaType = %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
 
         let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
 
         // If the fetch result is less than expected, return with an error.
-        if fetchResult.count != numberOfNewAssets {
-            throw CasperErrors.readError("Unexpected number of assets fetched, expected \(numberOfNewAssets) but only got \(fetchResult.count).")
+        if fetchResult.count != numberOfAssetsToFetch {
+            throw CasperErrors.readError("Unexpected number of assets fetched, expected \(numberOfAssetsToFetch) but only got \(fetchResult.count).")
         }
         
         var fetchedAssetArray: [PhotoAsset] = []
 
         // Loop through the fetched assets
-            for index in 0 ..< fetchResult.count {
-                print("<<ASSET_LIBRARY_UTILS>> Fetch latest N assets: at index - \(index) - ")
-                fetchedAssetArray.append(PHAssetToPhotoAsset(object: fetchResult[index]))
+        let printEveryN = 50
+        for index in 0 ..< fetchResult.count {
+            if index % printEveryN == 0 {
+                print("<<ASSET_LIBRARY_UTILS>> (PRINT EVERY \(printEveryN)) Fetch latest N assets: at index - \(index) - ")
+                print("<<ASSET_LIBRARY_UTILS>> has creation time of \(String(describing: fetchResult[index].creationDate))")
             }
+            fetchedAssetArray.append(PHAssetToPhotoAsset(object: fetchResult[index]))
+        }
         
         return fetchedAssetArray
     }
@@ -256,5 +264,55 @@ class AssetLibraryHelper: ObservableObject {
                           yDimension: object.pixelHeight,
                           creationTime: object.creationDate ?? Date(timeIntervalSince1970: 0),
                           duration: object.duration)
+    }
+    
+    // TODO: This function probably has bugs. It really needs tests (Will be easy to add). So add them!
+    private func diffOldAndNewAssetBuffers(oldBuffer: [PhotoAsset], newBuffer: [PhotoAsset]) throws -> [PhotoAsset] {
+        // Handle edge conditions.
+        if oldBuffer.count == 0 {
+            print("<<ASSET_LIBRARY_UTILS>> <<SCAN_DIFFER>> Returning the whole thing since the old buffer was never persisted")
+            return newBuffer
+        }
+        if newBuffer.count == 0 {
+            print("Apparently, all of the photos have been deleted...let's error here")
+            throw CasperErrors.readError("We do not expect all of the photos to have been deleted...")
+        }
+        
+        
+        // To avoid bugs if the kMaxAssetsToScan parameter changes between persistances, truncate the buffers to match the minimum size.
+        // The returned sort order is sorted as the most recent asset at index 0, so truncate the old assets from the back.
+        // This will maintain correctness, and basically just assumes that kMaxAssetsToScan will never get super small relative to old sizes; even if it does, it should still work (maybe?)
+        var countDifference = oldBuffer.count - newBuffer.count
+        var trimmedOldBuffer = oldBuffer
+        var trimmedNewBuffer = newBuffer
+        if (countDifference > 0)  {
+            // Means old > new, so need to cut off from the old.
+            trimmedOldBuffer.removeLast(countDifference)
+        } else if (countDifference < 0) {
+            // Means new > old, so need to cut off from the new.
+            trimmedNewBuffer.removeLast(-1*countDifference)
+        }
+
+        // We want to return items that ARE in the new buffer, but are NOT in the old buffer. Use a set to make this operation faster and more readable.
+        var oldSet = Set<String>()
+        for asset in trimmedOldBuffer {
+            oldSet.insert(asset.localId)
+        }
+        
+        var newAssets = [PhotoAsset]()
+        let oldestCreationTimeFromBefore = trimmedOldBuffer.last!.creationTime
+        for asset in trimmedNewBuffer {
+            if !oldSet.contains(asset.localId) {
+                if oldestCreationTimeFromBefore > asset.creationTime {
+                    print("<<ASSET_LIBRARY_UTILS>> <<SCAN_DIFFER>> Old asset, ignore")
+                    continue
+                }
+                print("<<ASSET_LIBRARY_UTILS>> <<SCAN_DIFFER>> Found difference for asset of local ID \(asset.localId) that was created at \(asset.creationTime)")
+                newAssets.append(asset)
+            }
+        }
+        
+        return newAssets
+        
     }
 }

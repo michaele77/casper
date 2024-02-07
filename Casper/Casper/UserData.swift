@@ -32,6 +32,7 @@ class AppConstants {
     static public let kLastModifiedDateDoubleKey: String = "image_manager-last_modified_date_double"
     static public let kTotalAssetNumberKey: String = "image_manager-total_asset_number"
     static public let kLastDetetedAssetKey: String = "image_manager-last_detected_asset"
+    static public let kRecentAssetsBufferKey: String = "image_manager-recent_assets_buffer"
     static public let kTimesAppHasLaunchedKey : String = "stats-times_app_has_launched"
     static public let kTimerCounterKey: String = "stats-timer_counter"
     static public let kLocalTimerCounter: String = "stats-local_timer_counter"
@@ -147,6 +148,7 @@ class ImageDataManager {
             print("No such lastDetectedAsset, returning default PhotoAsset")
             return PhotoAsset()
         }
+        // TODO: Need to figure out a way to fix these compilation warnings with unarchiveObject and archivedData; can be deprecated at any time really.
         let decodedLastDetectedAsset = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! PhotoAsset
         return decodedLastDetectedAsset
     }
@@ -160,6 +162,19 @@ class ImageDataManager {
     }
     func setLastDetectedAssetLocalId(lastDetectedAsssetLocalId: String) {
         prefs.set(lastDetectedAsssetLocalId, forKey: AppConstants.kLastDetectedAsssetLocalIdKey)
+    }
+    
+    // image buffer, an array of localIDs
+    func getAssetBuffer() -> [PhotoAsset] {
+        let decoded  = prefs.data(forKey: AppConstants.kRecentAssetsBufferKey)
+        if decoded == nil {
+            return [PhotoAsset]()
+        }
+        return NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! [PhotoAsset]
+    }
+    func setAssetBuffer(assetBuffer: [PhotoAsset]) {
+        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: assetBuffer)
+        prefs.set(encodedData, forKey: AppConstants.kRecentAssetsBufferKey)
     }
 }
 
@@ -268,8 +283,8 @@ class UserDataManager {
 }
 
 // This class manages the asset queue. This class attempts to make a thread-safe interface layer between a UserDefault array in persistance and what appears to be a queue externally.
-class ProcessingQueueManager {
-    static let shared = ProcessingQueueManager()
+class ProcessingQueue {
+    static let shared = ProcessingQueue()
     // Private initializer to prevent creating multiple instances
     private init() {}
 
@@ -325,13 +340,11 @@ class ProcessingQueueManager {
     // Get the array representing the queue and return it.
     // If it doesn't exist, return an empty array.
     private func getQueueFromStorage() -> [PhotoAsset] {
-        print("<<USER_DATA>> -->>>>  GETTING QUEUE!")
-        let currentArray = storage.array(forKey: ) as? [PhotoAsset] ?? []
-        
+        print("<<USER_DATA>> -->>>>  GETTING QUEUE!")        
         let decoded  = storage.data(forKey: AppConstants.kProcessingQueueKey)
         if decoded == nil {
             print("<<USER_DATA>> No processing queue, returning an empty array")
-            return []
+            return [PhotoAsset]()
         }
         let queue = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! [PhotoAsset]
         print("<<USER_DATA>>        - queue size: \(queue.count)")
