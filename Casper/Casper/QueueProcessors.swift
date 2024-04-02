@@ -44,7 +44,9 @@ class QueueProcessors {
                 print("<<ASSET_SCANNER>> Asset scanning starting.")
                 self.statsManager.incrementAllTimerCounters()
                 do {
+                    let start_time = Date().timeIntervalSince1970
                     try AssetLibraryHelper.shared.scanAndEnqueueNewAssets()
+                    self.statsManager.incrementSecondsSpentScanningAssets(additionalSeconds: Date().timeIntervalSince1970 - start_time)
                 } catch {
                     print("Error occured in addNewImagesToQueue: \(error.localizedDescription)")
                 }
@@ -73,7 +75,9 @@ class QueueProcessors {
             while true {
                 // Start of processing work.
                 print("<<QUEUE_PROCESSOR>> BackgroundProcessor starting.")
+                let start_time = Date().timeIntervalSince1970
                 let asset = ProcessingQueue.shared.dequeue()
+                self.statsManager.incrementSecondsSpentProcessingQueue(additionalSeconds: Date().timeIntervalSince1970 - start_time)
                 if asset.isDefault() {
                     print("<<QUEUE_PROCESSOR>> No new assets to process!")
                 } else {

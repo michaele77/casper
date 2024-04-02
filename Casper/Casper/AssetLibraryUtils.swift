@@ -125,10 +125,17 @@ class AssetLibraryHelper: ObservableObject {
         fetchOptions.predicate = NSPredicate(format: "mediaType = %d OR mediaType = %d", PHAssetMediaType.image.rawValue, PHAssetMediaType.video.rawValue)
 
         let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
-
+        
         // If the fetch result is less than expected, return with an error.
+        // (This can error if the account just doesn't have that many assets...
         if fetchResult.count != numberOfAssetsToFetch {
-            throw CasperErrors.readError("Unexpected number of assets fetched, expected \(numberOfAssetsToFetch) but only got \(fetchResult.count).")
+            print("Unexpected number of assets fetched, expected \(numberOfAssetsToFetch) but only got \(fetchResult.count).")
+            // Let's do a last check that the total number of assets the device contains is not simply smaller than the number of assets that was requested.
+            let fetchOptions = PHFetchOptions()
+            let allPhotos = PHAsset.fetchAssets(with: fetchOptions)
+            if allPhotos.count != fetchResult.count || allPhotos.count >= numberOfAssetsToFetch {
+                throw CasperErrors.readError("Unexpected number of assets fetched, expected \(numberOfAssetsToFetch) but only got \(fetchResult.count).")
+            }
         }
         
         var fetchedAssetArray: [PhotoAsset] = []

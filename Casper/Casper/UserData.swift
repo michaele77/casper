@@ -40,6 +40,8 @@ class AppConstants {
     static public let kFirstNameKey: String = "user_data-first_name"
     static public let kLastNameKey: String = "user_data-last_name"
     static public let kProcessingQueueKey: String = "data-processing_queue"
+    static public let kTimeProcessingQueueKey: String = "stats-processing_queue_seconds"
+    static public let kTimeScanningAssetsKey: String = "stats-asset_scanning_seconds"
 }
 
 enum AssetType: Hashable, Codable {
@@ -213,6 +215,26 @@ class StatsManager {
     }
     func getElapsedHoursBasedOnLocalCounter() -> Double {
         return Double(getLocalTimerCounter()) * AppParams.kTimerPeriodSeconds / 3600
+    }
+    func incrementSecondsSpentProcessingQueue(additionalSeconds: Double) {
+        let currentSecondsSpent = getSecondsSpentProcessingQueue()
+        stats.set(additionalSeconds + currentSecondsSpent, forKey: AppConstants.kTimeProcessingQueueKey)
+    }
+    func resetSecondsSpentProcessingQueue() {
+        stats.set(0.0, forKey: AppConstants.kTimeProcessingQueueKey)
+    }
+    func getSecondsSpentProcessingQueue() -> Double {
+        return stats.double(forKey: AppConstants.kTimeProcessingQueueKey)
+    }
+    func incrementSecondsSpentScanningAssets(additionalSeconds: Double) {
+        let currentSecondsSpent = getSecondsSpentScanningAssets()
+        stats.set(additionalSeconds + currentSecondsSpent, forKey: AppConstants.kTimeScanningAssetsKey)
+    }
+    func resetSecondsSpentScanningAssets() {
+        stats.set(0.0, forKey: AppConstants.kTimeScanningAssetsKey)
+    }
+    func getSecondsSpentScanningAssets() -> Double {
+        return stats.double(forKey: AppConstants.kTimeScanningAssetsKey)
     }
     
     // Because both timer counters should be incremented together, have a separate incrementor for that.

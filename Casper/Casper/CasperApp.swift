@@ -29,6 +29,8 @@ struct CasperApp: App {
     private func incrementStartupCounters() {
         statsManager.incrementTimesAppHasLaunched()
         statsManager.resetLocalTimerCounter()
+        statsManager.resetSecondsSpentScanningAssets()
+        statsManager.resetSecondsSpentProcessingQueue()
         print("<<CasperApp>> launching...has launched --> \(statsManager.getTimesAppHasLaunched()) times")
     }
     

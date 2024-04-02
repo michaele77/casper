@@ -52,15 +52,6 @@ struct SessionView: View {
                     .font(.custom("Copperplate", size: 50))
                 
                 Button(action: {
-                    AssetLibraryHelper.shared.fetchTotalNumberOfAssets()
-                }) {
-                    Text("get size")
-                }
-                .foregroundColor(Color.green)
-                .bold(true)
-                .font(.custom("Copperplate", size: 20))
-                
-                Button(action: {
                     assetMap = AssetLibraryHelper.shared.readFromPhotoLibrary()
                 }) {
                     Text("read photo library + print it")
@@ -79,11 +70,6 @@ struct SessionView: View {
                 .foregroundColor(Color.yellow)
                 .bold(false)
                 .font(.custom("Copperplate", size: 10))
-                
-                Text("[local timer counter] --> \(statsManager.getLocalTimerCounter())")
-                Text(String(format: "(hours elapse from local timer) --> %.2f", statsManager.getElapsedHoursBasedOnLocalCounter()))
-                Text("[timer counter] --> \(timerCounter)")
-                Text("[times app has launched] --> \(timesAppHasLaunched)")
                 
                 Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
                     .resizable()
