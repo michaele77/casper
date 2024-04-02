@@ -24,6 +24,7 @@
 		27E96D9629909D1300360B42 /* AssetLibraryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */; };
 		27E96D982990D56A00360B42 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D972990D56A00360B42 /* Errors.swift */; };
 		E8656D7B2B72187F005DB5DB /* QueueProcessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8656D7A2B72187F005DB5DB /* QueueProcessors.swift */; };
+		E8924EC62BBBEC6000AEB1E6 /* ProcessingQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */; };
 		E8FF4B832B6E13230031FB0E /* KillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FF4B822B6E13230031FB0E /* KillView.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLibraryUtils.swift; sourceTree = "<group>"; };
 		27E96D972990D56A00360B42 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		E8656D7A2B72187F005DB5DB /* QueueProcessors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueProcessors.swift; sourceTree = "<group>"; };
+		E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingQueueView.swift; sourceTree = "<group>"; };
 		E8FF4B822B6E13230031FB0E /* KillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KillView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +130,7 @@
 				27E96D8E296B710E00360B42 /* SessionCreationView.swift */,
 				27E96D8C296B6EFF00360B42 /* MainTabsView.swift */,
 				27E96D88296B6E4100360B42 /* FriendsView.swift */,
+				E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */,
 				E8FF4B822B6E13230031FB0E /* KillView.swift */,
 				27E96D8A296B6E5D00360B42 /* SettingsView.swift */,
 				27217AA9296ACA510072F0BF /* Assets.xcassets */,
@@ -293,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27E96D8B296B6E5D00360B42 /* SettingsView.swift in Sources */,
+				E8924EC62BBBEC6000AEB1E6 /* ProcessingQueueView.swift in Sources */,
 				27E96D89296B6E4100360B42 /* FriendsView.swift in Sources */,
 				27E96D9629909D1300360B42 /* AssetLibraryUtils.swift in Sources */,
 				27E96D8F296B710E00360B42 /* SessionCreationView.swift in Sources */,

@@ -40,6 +40,8 @@ struct ContentView: View {
         phoneNumber: "gNumber",
         password: "gPass")
     
+    @AppStorage(AppConstants.kHasCreatedAccountKey, store: .standard) var hasCreatedAccount: Bool = false
+    
     // DataManagers
     let userDataManager = UserDataManager()
     
@@ -62,7 +64,7 @@ struct ContentView: View {
                         .foregroundColor(Color(.systemBlue))
                         .offset(x: 0, y: -60)
                     
-                    Text("DEBUG: has created account? \(userDataManager.hasUserCreatedAccount() ? "false" : "true")")
+                    Text("DEBUG: has created account? \(userDataManager.hasUserCreatedAccount() ? "true" : "false")")
                     
                     Text("DEBUG: Hello \(userDataManager.getFirstName()) \(userDataManager.getLastName())")
                     Text("DEBUG: first name --> \(userDataManager.getFirstName())")

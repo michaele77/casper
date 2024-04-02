@@ -42,6 +42,8 @@ class AppConstants {
     static public let kProcessingQueueKey: String = "data-processing_queue"
     static public let kTimeProcessingQueueKey: String = "stats-processing_queue_seconds"
     static public let kTimeScanningAssetsKey: String = "stats-asset_scanning_seconds"
+    static public let kIsProcessingAllowed: String = "data-processing_is_allowed"
+    static public let kProcessingQueueWriteCounterKey: String = "data-processing_queue_write_counter"
 }
 
 enum AssetType: Hashable, Codable {
@@ -299,6 +301,7 @@ class UserDataManager {
         if hasCreatedAccount {
             return
         }
+        print("Marking as created...")
         userData.set(true, forKey: AppConstants.kHasCreatedAccountKey)
         hasCreatedAccount = true
     }
@@ -309,17 +312,16 @@ class ProcessingQueue {
     static let shared = ProcessingQueue()
     // Private initializer to prevent creating multiple instances
     private init() {}
+    
+    // Cache the latest read version so that we don't have to do a bunch of reads for display data (like displaying some of the processing queue).
+    // We should set this upon writes so that we get the most updated assets in the queue (and don't have to wait a scan/processing cycle for the changed queue to be reflected in the view).
+    var latest_10_processing_queue_assets: [PhotoAsset] = Array(repeating:PhotoAsset(), count: 10)
 
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
     private let queueLock = NSLock()
     
     private let storage = UserDefaults.standard
-    
-//    private var semaphore = false
-    private var lockTimeMicros = 0
-    private let lockTimeoutSeconds = 10
-    private var assetArray: [PhotoAsset] = []
 
     // Enqueues the input array of PhotoAssets.
     func enqueue(newAssets: [PhotoAsset]) {
@@ -373,8 +375,28 @@ class ProcessingQueue {
         return queue
     }
     
+    private func incrementProcessingQueueWriteCounter() {
+        storage.set(storage.integer(forKey: AppConstants.kProcessingQueueWriteCounterKey) + 1, forKey: AppConstants.kProcessingQueueWriteCounterKey)
+    }
+    
+    private func cacheLatest10Assets(queueToWrite: [PhotoAsset]) {
+        for i in 0...9 {
+            if queueToWrite.count > i {
+                latest_10_processing_queue_assets[i] = queueToWrite[i]
+                continue
+            }
+            latest_10_processing_queue_assets[i] = PhotoAsset()
+        }
+    }
+    
     private func writeQueueToStorage(queue: [PhotoAsset]) {
         print("<<USER_DATA>> <<<<<-- RETURNING QUEUE!")
+        // Everytime the queue changes, we will want to increment one of the other counters from storage.
+        // This will allow the processing queue view to be updated whenever the queue is updated (without doing some shenanigans with the queue itself).
+        // We also want to cache the latest N assets so that we can display a processing queue buffer.
+        incrementProcessingQueueWriteCounter()
+        cacheLatest10Assets(queueToWrite: queue)
+        
         let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: queue)
         storage.set(encodedData, forKey: AppConstants.kProcessingQueueKey)
         print("<<USER_DATA>>        - queue size: \(queue.count)")

@@ -285,30 +285,17 @@ class AssetLibraryHelper: ObservableObject {
             throw CasperErrors.readError("We do not expect all of the photos to have been deleted...")
         }
         
-        
-        // To avoid bugs if the kMaxAssetsToScan parameter changes between persistances, truncate the buffers to match the minimum size.
-        // The returned sort order is sorted as the most recent asset at index 0, so truncate the old assets from the back.
-        // This will maintain correctness, and basically just assumes that kMaxAssetsToScan will never get super small relative to old sizes; even if it does, it should still work (maybe?)
-        var countDifference = oldBuffer.count - newBuffer.count
-        var trimmedOldBuffer = oldBuffer
-        var trimmedNewBuffer = newBuffer
-        if (countDifference > 0)  {
-            // Means old > new, so need to cut off from the old.
-            trimmedOldBuffer.removeLast(countDifference)
-        } else if (countDifference < 0) {
-            // Means new > old, so need to cut off from the new.
-            trimmedNewBuffer.removeLast(-1*countDifference)
-        }
-
+        // TODO: An unfortante issue with this function is that if we reduce the kMaxAssetsToScan to be small from a larger size (like 100 --> 5), we will lose 95 of the pending images (if indeed we wanted to process all of them). If we increase the kMaxAssetsToScan to 100 again after that, it won't matter, since oldestCreationTimeFromBefore will limit the addition of those 95 "older" assets. Ultimately, this probably won't be a problem (oldestCreationTimeFromBefore will effectively become when a sharing session was started, so this logic won't be around for too long).
         // We want to return items that ARE in the new buffer, but are NOT in the old buffer. Use a set to make this operation faster and more readable.
         var oldSet = Set<String>()
-        for asset in trimmedOldBuffer {
+        for asset in oldBuffer {
             oldSet.insert(asset.localId)
         }
         
         var newAssets = [PhotoAsset]()
-        let oldestCreationTimeFromBefore = trimmedOldBuffer.last!.creationTime
-        for asset in trimmedNewBuffer {
+        let oldestCreationTimeFromBefore = oldBuffer.last!.creationTime
+        for asset in newBuffer {
+            print("<<ASSET_LIBRARY_UTILS>> asset has creation time of \(asset.creationTime) with local ID \(asset.localId)")
             if !oldSet.contains(asset.localId) {
                 if oldestCreationTimeFromBefore > asset.creationTime {
                     print("<<ASSET_LIBRARY_UTILS>> <<SCAN_DIFFER>> Old asset, ignore")

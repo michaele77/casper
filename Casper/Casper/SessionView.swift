@@ -13,6 +13,7 @@ struct SessionView: View {
     @State private var showNewSessionCreationPage: Bool = false
     @State private var assetMap: [String: Asset] = [:]
     @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
+    @State private var isToggled = false
     
     // These need to be bound to AppsStorage to make sure that the view is updated whenever the values are updated.
     @AppStorage(AppConstants.kTimerCounterKey, store: .standard) var timerCounter: Int = -1
@@ -44,7 +45,15 @@ struct SessionView: View {
                         .cornerRadius(10)
                 }
                 
+                Toggle("Queue Processing is On?", isOn: $isToggled)
+                    .onChange(of: isToggled) { newValue in
+                        print("Toggle switched to \(newValue)")
+                    }
+                            .padding()
+                
+                
                 Spacer().frame(height:50)
+                
                 
                 Text("Sessions!")
                     .foregroundColor(Color(.systemBlue))

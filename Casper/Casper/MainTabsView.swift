@@ -30,10 +30,14 @@ struct MainTabsView: View {
                 .tabItem {
                     Label("Settings", systemImage: "gear")
                 }.tag(3)
+            ProcessingQueueView()
+                .tabItem {
+                    Label("Queue", systemImage: "photo.stack.fill")
+                }.tag(4)
             KillView()
                 .tabItem {
                     Label("KILL", systemImage: "figure.wave.circle.fill")
-                }.tag(4)
+                }.tag(5)
         }
         .navigationBarBackButtonHidden(true)
     }
