@@ -46,6 +46,7 @@ class AssetLibraryHelper: ObservableObject {
         
         // 2)
         var prevAssetBuffer: [PhotoAsset] = imageManager.getAssetBuffer()
+        // Cache the latest 10 assets from the old asset buffer. This will be delayed by a scan cycle, but this should only be a few seconds at the most.
         
         // 3)
         var newAssets: [PhotoAsset] = try! diffOldAndNewAssetBuffers(oldBuffer: prevAssetBuffer, newBuffer: assetBuffer)
@@ -253,8 +254,6 @@ class AssetLibraryHelper: ObservableObject {
         var returnImage = UIImage()
         results.enumerateObjects { (thisAsset, _, _) in
             manager.requestImage(for: thisAsset, targetSize: PHImageManagerMaximumSize, contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: {(thisImage, _) in
-                print("<<>> --> Image size: \(thisImage!.size)")
-                print("<<>> --> Image scale: \(thisImage!.scale)")
                 returnImage = thisImage!
             })
         }
@@ -295,7 +294,6 @@ class AssetLibraryHelper: ObservableObject {
         var newAssets = [PhotoAsset]()
         let oldestCreationTimeFromBefore = oldBuffer.last!.creationTime
         for asset in newBuffer {
-            print("<<ASSET_LIBRARY_UTILS>> asset has creation time of \(asset.creationTime) with local ID \(asset.localId)")
             if !oldSet.contains(asset.localId) {
                 if oldestCreationTimeFromBefore > asset.creationTime {
                     print("<<ASSET_LIBRARY_UTILS>> <<SCAN_DIFFER>> Old asset, ignore")

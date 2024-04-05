@@ -12,16 +12,9 @@ struct SettingsView: View {
     let statsManager = StatsManager()
     
     // These need to be bound to AppsStorage to make sure that the view is updated whenever the values are updated.
-    
-    // App parameters.
-    
-    
-    // Counters.
     @AppStorage(AppConstants.kLastDetectedAsssetLocalIdKey, store: .standard) var lastDetectedLocalId: String = "EMPTY"
     @AppStorage(AppConstants.kLastModifiedDateDoubleKey, store: .standard) var lastModifiedDateDouble: Double = -1
     @AppStorage(AppConstants.kTotalAssetNumberKey, store: .standard) var totalAssetNumber: Int = -1
-//    @AppStorage(AppConstants.kLastDetetedAssetKey, store: .standard) var lastDetectedAsset: PhotoAsset = PhotoAsset()
-//    @AppStorage(AppConstants.kRecentAssetsBufferKey, store: .standard) var recentAssetsBuffer: [PhotoAsset]
     @AppStorage(AppConstants.kTimesAppHasLaunchedKey, store: .standard) var timesAppHasLaunched: Int = -1
     @AppStorage(AppConstants.kTimerCounterKey, store: .standard) var timerCounter: Int = -1
     @AppStorage(AppConstants.kLocalTimerCounter, store: .standard) var localTimerCounter: Int = -1
@@ -30,9 +23,7 @@ struct SettingsView: View {
     @AppStorage(AppConstants.kLastNameKey, store: .standard) var lastName: String = "EMPTY"
     @AppStorage(AppConstants.kTimeProcessingQueueKey, store: .standard) var secondsInProcessingQueue: Double = -1
     @AppStorage(AppConstants.kTimeScanningAssetsKey, store: .standard) var secondsScanningAssets: Double = -1
-
-    
-
+    @AppStorage(AppConstants.kIsProcessingAllowed, store: .standard) var isProcessingAllowed: Bool = false
 
     var body: some View {
         ZStack {
@@ -52,7 +43,7 @@ struct SettingsView: View {
                 
                 Spacer()
                 Text("App constants").font(.title)
-                Text("[kTimerPeriodSeconds]: \(AppParams.kTimerPeriodSeconds)")
+                Text("[kTimerPeriodSeconds]: \(AppParams.kAssetScanPeriodicitySeconds)")
                 Text("[kScanLastNAssets]: \(AppParams.kScanLastNAssets)")
                 Text("[kMaxAssetsToScan]: \(AppParams.kMaxAssetsToScan)")
                 Text("[kQueueProcessingPeriodicitySeconds]: \(AppParams.kQueueProcessingPeriodicitySeconds)")
@@ -62,6 +53,7 @@ struct SettingsView: View {
                 Text("[lastModifiedDateDouble]: \(lastModifiedDateDouble)")
                 Text("[totalAssetNumber]: \(totalAssetNumber)")
                 Text("[lastDetectedLocalId]: \(lastDetectedLocalId)")
+                Text("[isProcessingAllowed]: \(isProcessingAllowed ? "true" : "false")")
                 
                 Spacer()
                 Text("Misc data").font(.title)

@@ -9,67 +9,50 @@ import SwiftUI
 
 struct ProcessingQueueView: View {
     @AppStorage(AppConstants.kProcessingQueueWriteCounterKey, store: .standard) var queueWriteCounter: Int = -1
-    let xSize: CGFloat = 300
-    let ySize: CGFloat = 300
+    let xSize: CGFloat = 500
+    let ySize: CGFloat = 500
     
+    func getShortDateTime(time: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Define your desired date format
+        return formatter.string(from: time)
+    }
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: true) {
-            HStack(spacing: 20) {
-                ForEach(ProcessingQueue.shared.latest_10_processing_queue_assets, id: \.self) { photoAsset in
-                    Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: photoAsset.localId))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: xSize, height: ySize)
+        VStack() {
+            Text("Processing Queue Write Counter: \(queueWriteCounter)")
+            VStack {
+                HStack() {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 5)
+                            .fill(Color.blue)
+                            .frame(width: 25, height: 400)
+                        Text("Asset to process")
+                            .rotationEffect(Angle(degrees: -90))
+                            .foregroundColor(Color.black)
+                            .bold(false)
+                            .font(.custom("San Francisco", size: 15))
+                    }
+                    
+                    ScrollView(.horizontal, showsIndicators: true) {
+                        HStack(spacing: 10) {
+                            ForEach(ProcessingQueue.shared.latest_10_processing_queue_assets, id: \.self) { photoAsset in
+                                VStack() {
+                                    Text(getShortDateTime(time: photoAsset.creationTime))
+                                    Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: photoAsset.localId))
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: xSize, height: ySize)
+                                    Text("Type: \(photoAsset.type.rawValue)")
+                                }
+                            }
+                        }
+                        .padding()
+                    }
                 }
+                Spacer()
             }
-            .padding()
         }
-//        ZStack {
-//            Color(.systemGray2)
-//                .ignoresSafeArea()
-//            
-//            VStack() {
-//                Text("Processing Queue here!")
-//                
-//                Text("queue write counter: \(queueWriteCounter)")
-//                
-//                Text("-----")
-//                
-//                Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: ProcessingQueue.shared.latest_10_processing_queue_assets[0].localId))
-//                    .resizable()
-//                    .frame(width: xSize, height: ySize) // Set the desired width and height
-//                    .scaledToFit() // Maintain the aspect ratio of the image
-//                    .offset(x: 100, y: 100)
-//                
-//                Text("-----")
-//                
-//                Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: ProcessingQueue.shared.latest_10_processing_queue_assets[1].localId))
-//                    .resizable()
-//                    .frame(width: xSize, height: ySize) // Set the desired width and height
-//                    .scaledToFit() // Maintain the aspect ratio of the image
-//                    .offset(x: 100, y: 200)
-//                
-//                Text("-----")
-//                
-//                Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: ProcessingQueue.shared.latest_10_processing_queue_assets[2].localId))
-//                    .resizable()
-//                    .frame(width: xSize, height: ySize) // Set the desired width and height
-//                    .scaledToFit() // Maintain the aspect ratio of the image
-//                    .offset(x: 100, y: 300)
-//                
-//                Text("-----")
-//                
-//                Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: ProcessingQueue.shared.latest_10_processing_queue_assets[3].localId))
-//                    .resizable()
-//                    .frame(width: xSize, height: ySize) // Set the desired width and height
-//                    .scaledToFit() // Maintain the aspect ratio of the image]
-//                    .offset(x: 100, y: 400)
-//                
-//                Text("-----")
-//                
-//            }
-//        }
     }
 }
 

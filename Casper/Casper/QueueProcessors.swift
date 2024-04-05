@@ -39,10 +39,19 @@ class QueueProcessors {
     // Make sure that the active time of the processing queue remains small.
     private func asyncAssetScanner() {
         scanningThread.async {
+            var counter = 0
             while true {
+                counter += 1
+                if counter % AppParams.self.kProcessingQueueViewUpdateMultiplier == 0 {
+                    counter = 0
+                    print("<<ASSET_SCANNER>> CACCHHHIINNGGGGGGGGG")
+                    ProcessingQueue.shared.cacheLatest10Assets()
+                }
+                
                 // Start of processing work.
                 print("<<ASSET_SCANNER>> Asset scanning starting.")
                 self.statsManager.incrementAllTimerCounters()
+                ProcessingQueue.shared.incrementProcessingQueueWriteCounter()
                 do {
                     let start_time = Date().timeIntervalSince1970
                     try AssetLibraryHelper.shared.scanAndEnqueueNewAssets()
@@ -62,7 +71,7 @@ class QueueProcessors {
                 
                 // Sleep for a set amount of time and increment the threadPoker.
                 self.incrementThreadPoker()
-                Thread.sleep(forTimeInterval: AppParams.kTimerPeriodSeconds)
+                Thread.sleep(forTimeInterval: AppParams.kAssetScanPeriodicitySeconds)
             }
         }
         
@@ -74,6 +83,11 @@ class QueueProcessors {
         processingThread.async {
             while true {
                 // Start of processing work.
+                if !ProcessingQueue.shared.getIsProcessingAllowed() {
+                    print("<<QUEUE_PROCESSOR>> Queue Processing is not allowed, sleeping...")
+                    Thread.sleep(forTimeInterval: AppParams.kQueueProcessingPeriodicitySeconds)
+                    continue
+                }
                 print("<<QUEUE_PROCESSOR>> BackgroundProcessor starting.")
                 let start_time = Date().timeIntervalSince1970
                 let asset = ProcessingQueue.shared.dequeue()
@@ -95,6 +109,5 @@ class QueueProcessors {
                 Thread.sleep(forTimeInterval: AppParams.kQueueProcessingPeriodicitySeconds)
             }
         }
-        
     }
 }

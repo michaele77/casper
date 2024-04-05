@@ -48,6 +48,8 @@ struct SessionView: View {
                 Toggle("Queue Processing is On?", isOn: $isToggled)
                     .onChange(of: isToggled) { newValue in
                         print("Toggle switched to \(newValue)")
+                        ProcessingQueue.shared.setIsProcessingAllowed(is_allowed: newValue)
+                        print("isProcessingAllowed is switched to \(ProcessingQueue.shared.getIsProcessingAllowed() ? "true" : "false")")
                     }
                             .padding()
                 
