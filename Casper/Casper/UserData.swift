@@ -365,6 +365,11 @@ class ProcessingQueue {
         let currentAssets = storage.array(forKey: AppConstants.kProcessingQueueKey) as? [PhotoAsset] ?? []
         return currentAssets.count
     }
+    
+    // Clears out the processing queue (FOR DEBUG USE ONLY).
+    func debugUseOnlyResetProcessingQueue() {
+        writeQueueToStorage(queue: [PhotoAsset]())
+    }
 
     // Get the array representing the queue and return it.
     // If it doesn't exist, return an empty array.
@@ -373,7 +378,6 @@ class ProcessingQueue {
         let decoded  = storage.data(forKey: AppConstants.kProcessingQueueKey)
         if decoded == nil {
             print("<<USER_DATA>> No processing queue, returning an empty array")
-//            cacheLatest10Assets(queueToWrite: [PhotoAsset]())
             return [PhotoAsset]()
         }
         let queue = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! [PhotoAsset]
@@ -393,7 +397,6 @@ class ProcessingQueue {
     }
     
     func cacheLatest10Assets() {
-//        latest_10_processing_queue_assets = queueToWrite
         print("<<CACHINGASSETS>> Starting caching")
         var processingQueue = getQueueFromStorage()
         for (index, asset) in processingQueue.enumerated() {

@@ -7,11 +7,32 @@
 
 import SwiftUI
 
+class ClickGenerator {
+    var prevId:String = "none"
+    var isFirst = true
+    func clickIfProcessed(newId: String) {
+        if prevId != newId {
+            prevId = newId
+            
+            // Do not click the haptic feedback the first time we update the view
+            if isFirst {
+                isFirst = false
+                return
+            }
+            
+            // Perform haptic feedback
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred()
+        }
+    }
+}
+
 struct ProcessingQueueView: View {
     @AppStorage(AppConstants.kProcessingQueueWriteCounterKey, store: .standard) var queueWriteCounter: Int = -1
     let xSize: CGFloat = 500
     let ySize: CGFloat = 500
-    
+    let clicky = ClickGenerator()
+
     func getShortDateTime(time: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss" // Define your desired date format

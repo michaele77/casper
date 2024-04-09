@@ -42,15 +42,19 @@ class AssetLibraryHelper: ObservableObject {
         // TODO: Confirm this functionalility with airdropped photos! Either way, probably not a huge deal (given the reasoning above).
         
         // 1)
+        print("<<DEBUG 1")
         let assetBuffer: [PhotoAsset] = try fetchMetadataForNLastestAssets(numberOfAssetsToFetch: AppParams.kMaxAssetsToScan)
         
+        print("<<DEBUG 2 size of assetBuffer: \(assetBuffer.count)")
         // 2)
         var prevAssetBuffer: [PhotoAsset] = imageManager.getAssetBuffer()
         // Cache the latest 10 assets from the old asset buffer. This will be delayed by a scan cycle, but this should only be a few seconds at the most.
         
+        print("<<DEBUG 3 size of prevAssetBuffer: \(prevAssetBuffer.count)")
         // 3)
         var newAssets: [PhotoAsset] = try! diffOldAndNewAssetBuffers(oldBuffer: prevAssetBuffer, newBuffer: assetBuffer)
         
+        print("<<DEBUG 4 size of newAssets: \(newAssets.count)")
         // 4) TODO: Implement this optional check? Maybe?
         
         // Early out if no difference.
@@ -128,13 +132,16 @@ class AssetLibraryHelper: ObservableObject {
         let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
         
         // If the fetch result is less than expected, return with an error.
-        // (This can error if the account just doesn't have that many assets...
+        // (This can error if the account just doesn't have that many assets...)
         if fetchResult.count != numberOfAssetsToFetch {
             print("Unexpected number of assets fetched, expected \(numberOfAssetsToFetch) but only got \(fetchResult.count).")
             // Let's do a last check that the total number of assets the device contains is not simply smaller than the number of assets that was requested.
             let fetchOptions = PHFetchOptions()
             let allPhotos = PHAsset.fetchAssets(with: fetchOptions)
+            print("what is the fetch count: \(fetchResult.count)")
+            print("what is the total photoi count: \(allPhotos.count)")
             if allPhotos.count != fetchResult.count || allPhotos.count >= numberOfAssetsToFetch {
+                print("throwing error!")
                 throw CasperErrors.readError("Unexpected number of assets fetched, expected \(numberOfAssetsToFetch) but only got \(fetchResult.count).")
             }
         }
@@ -142,8 +149,9 @@ class AssetLibraryHelper: ObservableObject {
         var fetchedAssetArray: [PhotoAsset] = []
 
         // Loop through the fetched assets
+        // We are returned the latest asset first. We actually want to reverse this so that the first index is the oldest asset (but we still need to fetch the images above in descending order so we're only looking at the latest 100).
         let printEveryN = 50
-        for index in 0 ..< fetchResult.count {
+        for index in (0 ..< fetchResult.count).reversed() {
             if index % printEveryN == 0 {
                 print("<<ASSET_LIBRARY_UTILS>> (PRINT EVERY \(printEveryN)) Fetch latest N assets: at index - \(index) - ")
                 print("<<ASSET_LIBRARY_UTILS>> has creation time of \(String(describing: fetchResult[index].creationDate))")
