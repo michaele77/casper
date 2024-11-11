@@ -97,10 +97,60 @@ class QueueProcessors {
                 } else {
                     print("<<QUEUE_PROCESSOR>> dequeued asset with localID of \(asset.localId)")
                     print("<<QUEUE_PROCESSOR>> sending request to server...")
-                    // TODO: Obviously, replace this for a stub to the real server.
                     // SIMULATING A REQUEST TO SERVER, TAKES SOME RANDOM AMOUNT OF TIME
                     Thread.sleep(forTimeInterval: Double.random(in: 0.5..<5))
-                    print("<<QUEUE_PROCESSOR>> request sent!")
+                    
+                    // Now we conver the UI image into either a JPG or a PNG.
+                    let fullImage = AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: asset.localId)
+                    
+                    guard let imageData = fullImage.pngData() else {
+                        print("          >>> <<<<<            ")
+                        print("      >>>>>>> <<<<<<<<<<       ")
+                        print("   >>>>>>>>>> <<<<<<<<<<<<<<   ")
+                        print(">>>>>>>>>>>>> <<<<<<<<<<<<<<<<<")
+                        print(">>> Image conversion failed <<<")
+                        return
+                    }
+                    print("Data: \(imageData)")
+                    
+                    // Get the local server name
+//                    let uploadImageEndpoint = "http://127.0.0.1:5000/upload-image"
+                    let uploadImageEndpoint = "http://192.168.86.250:17463/upload-image"
+                    // Create the request
+                    var request = URLRequest(url: URL(string: uploadImageEndpoint)!)
+                    request.httpMethod = "POST"
+                    let boundary = "---***---***---"
+                    request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+                    // Generate body data for multipart/form-data
+                    var body = Data()
+                    // Append image data to the body
+                    body.append("--\(boundary)\r\n".data(using: .utf8)!)
+                    body.append("Content-Disposition: form-data; name=\"uploaded_image\"; filename=\"image.png\"\r\n".data(using: .utf8)!)
+                    body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+                    body.append(imageData)
+                    body.append("\r\n".data(using: .utf8)!)
+
+                    body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+                    // Set the HTTP body
+                    request.httpBody = body
+
+                    // Perform the request
+                    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                        if let error = error {
+                            print("Error sending image: \(error)")
+                            return
+                        }
+                        if let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                            print("Image uploaded successfully")
+                        }
+                    }
+
+                    // Start the async network request.
+                    task.resume()
+                    
+                    
                 }
                 // End of processing work.
                 
