@@ -15,7 +15,7 @@ class AppParams {
     // We will be initializing all of the parameters here and hardcoding it.
     // TODO: Ideally, these parameters should probably either be: 1) fetched from the server and based on the current App version or 2) stored in some other plist or other sort of file so they are centrally located.
     // Scanner periodicity. This is how often the assets are checked and updated.
-    static public let kAssetScanPeriodicitySeconds: Double = 3
+    static public let kAssetScanPeriodicitySeconds: Double = 10
     // Number of assets to scan back per scanning trip.
     static public let kScanLastNAssets: Int = 10
     // Maximum number of assets to scan back to. Anything before this will not be considered by the App.
@@ -23,7 +23,7 @@ class AppParams {
     // Asset dequeue periodicity. This basically defines the asset upload rate.
     // A periodicity of 10s --> 360 assets uploaded per hour.
     // A periodicity of 1s --> 3600 assets uploaded per hour.
-    static public let kQueueProcessingPeriodicitySeconds: Double = 1
+    static public let kQueueProcessingPeriodicitySeconds: Double = 5
     // How often we want to update the queue processor cache.
     // This*kAssetScanPeriodicitySeconds will basically be the refresh rate of the queue processor display; for now, just leave it to 1.
     static public let kProcessingQueueViewUpdateMultiplier: Int = 1

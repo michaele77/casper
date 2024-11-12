@@ -14,11 +14,6 @@ struct SessionView: View {
     @State private var assetMap: [String: Asset] = [:]
     @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
     @State private var isToggled = false
-    
-    // These need to be bound to AppsStorage to make sure that the view is updated whenever the values are updated.
-    @AppStorage(AppConstants.kTimerCounterKey, store: .standard) var timerCounter: Int = -1
-    @AppStorage(AppConstants.kTimesAppHasLaunchedKey, store: .standard) var timesAppHasLaunched: Int = -1
-    @AppStorage(AppConstants.kLastDetectedAsssetLocalIdKey, store: .standard) var mostRecentAssetLocalId: String = "EMPTY"
         
     // DataManagers
     let statsManager = StatsManager()
@@ -89,35 +84,10 @@ struct SessionView: View {
                 
                 Text("size of assetmap: \(assetMap.count)")
                 
-                Button(action: {
-                    shownImage = AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId)
-                }) {
-                    Text("print latest image with localID of \(imageManager.getLastDetectedAsset().localId)")
-                }
-                .foregroundColor(Color.yellow)
-                .bold(false)
-                .font(.custom("Copperplate", size: 10))
-                
                 Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
                     .resizable()
                     .frame(width: 200, height: 200) // Set the desired width and height
                     .scaledToFit() // Maintain the aspect ratio of the image
-                
-                Button(action: {
-                    self.showNewSessionCreationPage.toggle()
-                }) {
-                    Text("+")
-                }
-                .sheet(isPresented: $showNewSessionCreationPage) {
-                    SessionCreationView()
-                }
-                .frame(width: 100, height: 100)
-                .bold(false)
-                .font(.custom("Copperplate", size: 100))
-                .foregroundColor(Color.white)
-                .background(Color(.systemBlue))
-                .clipShape(Circle())
-                .offset(x:0, y:50)
             }
         }
     }

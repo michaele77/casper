@@ -8,36 +8,22 @@
 import SwiftUI
 
 struct MainTabsView: View {    
-    @State private var default_tab = 2
-    // This needs to be created here becuase we are using this in the main timer callback.
-    @StateObject var asset_library_helper = AssetLibraryHelper.shared
-    
-    // DataManagers
-    let imageManager = ImageDataManager()
-    let statsManager = StatsManager()
-    
+    @State private var default_tab = 1
+
     var body: some View {
         TabView(selection:$default_tab) {
-            FriendsView()
-                .tabItem {
-                    Label("Friends", systemImage: "person.3.sequence.fill")
-                }.tag(1)
             SessionView()
                 .tabItem {
                     Label("Sessions", systemImage: "network")
-                }.tag(2)
+                }.tag(1)
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
-                }.tag(3)
+                }.tag(2)
             ProcessingQueueView()
                 .tabItem {
                     Label("Queue", systemImage: "photo.stack.fill")
-                }.tag(4)
-            KillView()
-                .tabItem {
-                    Label("KILL", systemImage: "figure.wave.circle.fill")
-                }.tag(5)
+                }.tag(3)
         }
         .navigationBarBackButtonHidden(true)
     }
