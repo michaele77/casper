@@ -20,10 +20,6 @@
 		27E96D94299093B800360B42 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D93299093B800360B42 /* UserData.swift */; };
 		27E96D9629909D1300360B42 /* AssetLibraryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */; };
 		27E96D982990D56A00360B42 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E96D972990D56A00360B42 /* Errors.swift */; };
-		E8204E472CE3268100371491 /* EchoedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8204E462CE3268100371491 /* EchoedImageView.swift */; };
-		E8204E492CE326A000371491 /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8204E482CE326A000371491 /* WebSocketManager.swift */; };
-		E8204E4B2CE4804200371491 /* cert.pem in Resources */ = {isa = PBXBuildFile; fileRef = E8204E4A2CE4804200371491 /* cert.pem */; };
-		E8204E4E2CE4864400371491 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = E8204E4D2CE4864400371491 /* SocketIO */; };
 		E8656D7B2B72187F005DB5DB /* QueueProcessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8656D7A2B72187F005DB5DB /* QueueProcessors.swift */; };
 		E8924EC62BBBEC6000AEB1E6 /* ProcessingQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */; };
 /* End PBXBuildFile section */
@@ -63,9 +59,6 @@
 		27E96D93299093B800360B42 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetLibraryUtils.swift; sourceTree = "<group>"; };
 		27E96D972990D56A00360B42 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
-		E8204E462CE3268100371491 /* EchoedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EchoedImageView.swift; sourceTree = "<group>"; };
-		E8204E482CE326A000371491 /* WebSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
-		E8204E4A2CE4804200371491 /* cert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cert.pem; path = ../../server/server/ssl/cert.pem; sourceTree = "<group>"; };
 		E8656D7A2B72187F005DB5DB /* QueueProcessors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueProcessors.swift; sourceTree = "<group>"; };
 		E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingQueueView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,7 +68,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8204E4E2CE4864400371491 /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,11 +121,8 @@
 				27E96D8C296B6EFF00360B42 /* MainTabsView.swift */,
 				E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */,
 				27E96D8A296B6E5D00360B42 /* SettingsView.swift */,
-				E8204E462CE3268100371491 /* EchoedImageView.swift */,
-				E8204E482CE326A000371491 /* WebSocketManager.swift */,
 				27217AA9296ACA510072F0BF /* Assets.xcassets */,
 				27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */,
-				E8204E4A2CE4804200371491 /* cert.pem */,
 				27217AAB296ACA510072F0BF /* Preview Content */,
 			);
 			path = Casper;
@@ -180,9 +169,6 @@
 			dependencies = (
 			);
 			name = Casper;
-			packageProductDependencies = (
-				E8204E4D2CE4864400371491 /* SocketIO */,
-			);
 			productName = Casper;
 			productReference = 27217AA2296ACA500072F0BF /* Casper.app */;
 			productType = "com.apple.product-type.application";
@@ -255,9 +241,6 @@
 				Base,
 			);
 			mainGroup = 27217A99296ACA500072F0BF;
-			packageReferences = (
-				E8204E4C2CE4864400371491 /* XCRemoteSwiftPackageReference "socket" */,
-			);
 			productRefGroup = 27217AA3296ACA500072F0BF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -276,7 +259,6 @@
 			files = (
 				27217AAD296ACA510072F0BF /* Preview Assets.xcassets in Resources */,
 				27217AAA296ACA510072F0BF /* Assets.xcassets in Resources */,
-				E8204E4B2CE4804200371491 /* cert.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,11 +290,9 @@
 				27E96D982990D56A00360B42 /* Errors.swift in Sources */,
 				E8656D7B2B72187F005DB5DB /* QueueProcessors.swift in Sources */,
 				27217AD7296B66F10072F0BF /* SessionView.swift in Sources */,
-				E8204E472CE3268100371491 /* EchoedImageView.swift in Sources */,
 				27217AB2296ACA510072F0BF /* Casper.xcdatamodeld in Sources */,
 				27217AA6296ACA500072F0BF /* CasperApp.swift in Sources */,
 				27E96D8D296B6EFF00360B42 /* MainTabsView.swift in Sources */,
-				E8204E492CE326A000371491 /* WebSocketManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -637,25 +617,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		E8204E4C2CE4864400371491 /* XCRemoteSwiftPackageReference "socket" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		E8204E4D2CE4864400371491 /* SocketIO */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E8204E4C2CE4864400371491 /* XCRemoteSwiftPackageReference "socket" */;
-			productName = SocketIO;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		27217AB0296ACA510072F0BF /* Casper.xcdatamodeld */ = {

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MainTabsView: View {    
     @State private var default_tab = 1
-    @EnvironmentObject var webSocketManager: WebSocketManager
 
     var body: some View {
         TabView(selection:$default_tab) {
@@ -25,10 +24,6 @@ struct MainTabsView: View {
                 .tabItem {
                     Label("Queue", systemImage: "photo.stack.fill")
                 }.tag(3)
-            EchoedImageView()
-                .tabItem {
-                    Label("Echo", systemImage: "dog")
-                }.tag(4)
         }
         .navigationBarBackButtonHidden(true)
     }
