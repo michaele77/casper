@@ -29,6 +29,11 @@ class AppParams {
     static public let kProcessingQueueViewUpdateMultiplier: Int = 1
 }
 
+class AppConfig {
+    static public let kServerEndpoint: String = "http://192.168.86.250:17463"
+    static public let kServerAddress: String = "192.168.86.250:17463"
+}
+
 class AppConstants {
     // Define all of the constant user default name mappings here. That way, they wont be spread all over the place in code.
     static public let kLastDetectedAsssetLocalIdKey: String = "image_manager-last_detected_asset_local_id"
@@ -47,6 +52,7 @@ class AppConstants {
     static public let kTimeScanningAssetsKey: String = "stats-asset_scanning_seconds"
     static public let kIsProcessingAllowed: String = "data-processing_is_allowed"
     static public let kProcessingQueueWriteCounterKey: String = "data-processing_queue_write_counter"
+    
 }
 
 enum AssetType: Hashable, Codable {
