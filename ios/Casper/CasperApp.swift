@@ -11,6 +11,8 @@ import CoreData
 
 @main
 struct CasperApp: App {
+    @StateObject private var webSocketManager = WebSocketManager.shared
+
     // DataManagers
     let statsManager = StatsManager()
     let imageManager = ImageDataManager()
@@ -43,6 +45,7 @@ struct CasperApp: App {
     var body: some Scene {
         WindowGroup {
             MainTabsView()
+                .environmentObject(webSocketManager)
         }
     }
 }

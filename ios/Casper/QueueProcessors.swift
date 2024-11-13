@@ -7,6 +7,32 @@
 
 import Foundation
 
+ func createUrlRequest(imageData: Data) -> URLRequest {
+     let uploadImageEndpoint = AppConfig.kServerEndpoint + "/upload-image"
+    // Create the request
+    var request = URLRequest(url: URL(string: uploadImageEndpoint)!)
+    request.httpMethod = "POST"
+    let boundary = "---***---***---"
+    request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+    // Generate body data for multipart/form-data
+    var body = Data()
+    // Append image data to the body
+    body.append("--\(boundary)\r\n".data(using: .utf8)!)
+    body.append("Content-Disposition: form-data; name=\"uploaded_image\"; filename=\"image.png\"\r\n".data(using: .utf8)!)
+    body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+    body.append(imageData)
+    body.append("\r\n".data(using: .utf8)!)
+
+    body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+    // Set the HTTP body
+    request.httpBody = body
+    
+    return request
+}
+
+
 class QueueProcessors {
     static let shared = QueueProcessors()
     private init() {}
@@ -77,6 +103,8 @@ class QueueProcessors {
         
     }
     
+    
+    
     // This function calls an infinite loop that continuously processes the queue.
     // Make sure that the active time of the processing queue remains small.
     private func asyncQueueProcessor() {
@@ -113,42 +141,24 @@ class QueueProcessors {
                     }
                     print("Data: \(imageData)")
                     
-                    // Get the local server name
-//                    let uploadImageEndpoint = "http://127.0.0.1:5000/upload-image"
-                    let uploadImageEndpoint = "http://192.168.86.250:17463/upload-image"
-                    // Create the request
-                    var request = URLRequest(url: URL(string: uploadImageEndpoint)!)
-                    request.httpMethod = "POST"
-                    let boundary = "---***---***---"
-                    request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                    WebSocketManager.shared.sendMessage(message: ">>>> Start")
+                    WebSocketManager.shared.sendImage(imageData: imageData)
+                    WebSocketManager.shared.sendMessage(message: "End <<<<")
+                    
 
-                    // Generate body data for multipart/form-data
-                    var body = Data()
-                    // Append image data to the body
-                    body.append("--\(boundary)\r\n".data(using: .utf8)!)
-                    body.append("Content-Disposition: form-data; name=\"uploaded_image\"; filename=\"image.png\"\r\n".data(using: .utf8)!)
-                    body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-                    body.append(imageData)
-                    body.append("\r\n".data(using: .utf8)!)
-
-                    body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-
-                    // Set the HTTP body
-                    request.httpBody = body
-
-                    // Perform the request
-                    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                        if let error = error {
-                            print("Error sending image: \(error)")
-                            return
-                        }
-                        if let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 {
-                            print("Image uploaded successfully")
-                        }
-                    }
-
-                    // Start the async network request.
-                    task.resume()
+//                    // Perform the request
+//                    let task = URLSession.shared.dataTask(with: createUrlRequest(imageData: imageData)) { data, response, error in
+//                        if let error = error {
+//                            print("Error sending image: \(error)")
+//                            return
+//                        }
+//                        if let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 {
+//                            print("Image uploaded successfully")
+//                        }
+//                    }
+//
+//                    // Start the async network request.
+//                    task.resume()
                     
                     
                 }
