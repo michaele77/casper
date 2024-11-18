@@ -9,8 +9,6 @@
 import Foundation
 import Photos
 
-
-
 class AppParams {
     // We will be initializing all of the parameters here and hardcoding it.
     // TODO: Ideally, these parameters should probably either be: 1) fetched from the server and based on the current App version or 2) stored in some other plist or other sort of file so they are centrally located.
@@ -23,15 +21,18 @@ class AppParams {
     // Asset dequeue periodicity. This basically defines the asset upload rate.
     // A periodicity of 10s --> 360 assets uploaded per hour.
     // A periodicity of 1s --> 3600 assets uploaded per hour.
-    static public let kQueueProcessingPeriodicitySeconds: Double = 5
+    static public let kQueueProcessingPeriodicitySeconds: Double = 10
     // How often we want to update the queue processor cache.
     // This*kAssetScanPeriodicitySeconds will basically be the refresh rate of the queue processor display; for now, just leave it to 1.
     static public let kProcessingQueueViewUpdateMultiplier: Int = 1
 }
 
 class AppConfig {
-    static public let kServerEndpoint: String = "http://192.168.86.250:17463"
-    static public let kServerAddress: String = "192.168.86.250:17463"
+    static public let kIPAddress = "192.168.86.216" // 67.169.140.244" // 192.168.86.250
+    static public let kPortNumber = "12345"
+    static public let kServerAddress: String = kIPAddress + ":" + kPortNumber
+    static public let kServerEndpoint: String = "http://" + kServerAddress
+    
 }
 
 class AppConstants {
@@ -334,24 +335,20 @@ class ProcessingQueue {
 
     // Enqueues the input array of PhotoAssets.
     func enqueue(newAssets: [PhotoAsset]) {
-        print("<<USER_DATA>> VV_LOCKING_VV")
         queueLock.lock()
         writeQueueToStorage(queue: getQueueFromStorage() + newAssets)
         queueLock.unlock()
-        print("<<USER_DATA>> VV_UNLOCKED_VV")
     }
     
     // Dequeues the first asset from the processing queue and returns it.
     // If the queue has nothing to dequeue, a default asset is returned.
     func dequeue() -> PhotoAsset {
-        print("<<DEQUEUE>> VV_LOCKING_VV")
         queueLock.lock()
         // Load current array representing the queue and remove the first asset.
         var currentAssets = getQueueFromStorage()
         
         if currentAssets.count == 0 {
             queueLock.unlock()
-            print("<<DEQUEUE>> VV_UNLOCKED_VV")
             return PhotoAsset()
         }
         let firstAsset = currentAssets.removeFirst()
@@ -360,7 +357,6 @@ class ProcessingQueue {
         // Write the new combined array to storage.
         writeQueueToStorage(queue: currentAssets)
         queueLock.unlock()
-        print("<<DEQUEUE>> VV_UNLOCKED_VV")
 
         // Return the removed asset.
         return firstAsset
@@ -380,14 +376,12 @@ class ProcessingQueue {
     // Get the array representing the queue and return it.
     // If it doesn't exist, return an empty array.
     private func getQueueFromStorage() -> [PhotoAsset] {
-        print("<<USER_DATA>> -->>>>  GETTING QUEUE!")        
         let decoded  = storage.data(forKey: AppConstants.kProcessingQueueKey)
         if decoded == nil {
             print("<<USER_DATA>> No processing queue, returning an empty array")
             return [PhotoAsset]()
         }
         let queue = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as! [PhotoAsset]
-        print("<<USER_DATA>>        - queue size: \(queue.count)")
         return queue
     }
     
@@ -403,17 +397,11 @@ class ProcessingQueue {
     }
     
     func cacheLatest10Assets() {
-        print("<<CACHINGASSETS>> Starting caching")
-        var processingQueue = getQueueFromStorage()
-        for (index, asset) in processingQueue.enumerated() {
-            print("<<DEQUEUE>> index[\(index)] asset creation time = \(asset.creationTime)")
-        }
+        let processingQueue = getQueueFromStorage()
         
+        print("size of processingQueue: \(processingQueue.count)")
         for i in 0...4 {
             if processingQueue.count > i {
-                print("<<CACHINGASSETS>> Adding a real image")
-                print("size of processingQueue: \(processingQueue.count)")
-                print("size of latest_10_processing_queue_assets: \(latest_10_processing_queue_assets.count)")
                 latest_10_processing_queue_assets[i] = processingQueue[i]
             } else {
                 print("<<CACHINGASSETS>> Adding a fake image")
@@ -423,7 +411,6 @@ class ProcessingQueue {
     }
     
     private func writeQueueToStorage(queue: [PhotoAsset]) {
-        print("<<USER_DATA>> <<<<<-- RETURNING QUEUE!")
         // Everytime the queue changes, we will want to increment one of the other counters from storage.
         // This will allow the processing queue view to be updated whenever the queue is updated (without doing some shenanigans with the queue itself).
         // We also want to cache the latest N assets so that we can display a processing queue buffer.

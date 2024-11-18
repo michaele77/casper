@@ -20,13 +20,11 @@ class AssetLibraryHelper: ObservableObject {
     let imageManager = ImageDataManager()
 
     public func fetchAndPersistLatestAsset() throws {
-        print("timer fired @ \(String(describing: time))")
         // Let's read from the photo library.
         guard let asset: PhotoAsset = fetchMetadataForLatestAsset() else {
             throw CasperErrors.readError("Latest asset could not be fetched.")
         }
 
-        print("Persisted asset with creation time of \(asset.creationTime)")
         imageManager.setLastDetectedAsset(lastDetectedAsset: asset)
     }
     
@@ -42,19 +40,15 @@ class AssetLibraryHelper: ObservableObject {
         // TODO: Confirm this functionalility with airdropped photos! Either way, probably not a huge deal (given the reasoning above).
         
         // 1)
-        print("<<DEBUG 1")
         let assetBuffer: [PhotoAsset] = try fetchMetadataForNLastestAssets(numberOfAssetsToFetch: AppParams.kMaxAssetsToScan)
         
-        print("<<DEBUG 2 size of assetBuffer: \(assetBuffer.count)")
         // 2)
         var prevAssetBuffer: [PhotoAsset] = imageManager.getAssetBuffer()
         // Cache the latest 10 assets from the old asset buffer. This will be delayed by a scan cycle, but this should only be a few seconds at the most.
         
-        print("<<DEBUG 3 size of prevAssetBuffer: \(prevAssetBuffer.count)")
         // 3)
         var newAssets: [PhotoAsset] = try! diffOldAndNewAssetBuffers(oldBuffer: prevAssetBuffer, newBuffer: assetBuffer)
         
-        print("<<DEBUG 4 size of newAssets: \(newAssets.count)")
         // 4) TODO: Implement this optional check? Maybe?
         
         // Early out if no difference.
@@ -67,7 +61,7 @@ class AssetLibraryHelper: ObservableObject {
         imageManager.setAssetBuffer(assetBuffer: assetBuffer)
         
         // 6)
-        print("<<ASSET_LIBRARY_UTILS>> Do Enqueing \(newAssets.count) more assets!")
+        print("<<ASSET_LIBRARY_UTILS>> Enqueing \(newAssets.count) more assets!")
         ProcessingQueue.shared.enqueue(newAssets: newAssets)
     }
     
@@ -150,12 +144,7 @@ class AssetLibraryHelper: ObservableObject {
 
         // Loop through the fetched assets
         // We are returned the latest asset first. We actually want to reverse this so that the first index is the oldest asset (but we still need to fetch the images above in descending order so we're only looking at the latest 100).
-        let printEveryN = 50
         for index in (0 ..< fetchResult.count).reversed() {
-            if index % printEveryN == 0 {
-                print("<<ASSET_LIBRARY_UTILS>> (PRINT EVERY \(printEveryN)) Fetch latest N assets: at index - \(index) - ")
-                print("<<ASSET_LIBRARY_UTILS>> has creation time of \(String(describing: fetchResult[index].creationDate))")
-            }
             fetchedAssetArray.append(PHAssetToPhotoAsset(object: fetchResult[index]))
         }
         
@@ -188,7 +177,6 @@ class AssetLibraryHelper: ObservableObject {
                     allSortedAssets.append(tempAsset)
                     allAssetMap[tempAsset.localId] = tempAsset
                 }
-                print("Done with images, asset total is \(counter)")
                 
                 print("Fetching videos....")
                 var videoMap: [String: Date] = [:]
@@ -202,14 +190,9 @@ class AssetLibraryHelper: ObservableObject {
                 semaphore.signal()
             }
             
-            print("now let's sort the assets")
             allSortedAssets.sort(by: { (lhs, rhs) -> Bool in
                 return lhs.creationTime < rhs.creationTime
             })
-            print("Done sorting the assets")
-            print("What were the most recent photos? ")
-            print(allSortedAssets.suffix(20))
-            print("let's look at a specific photo: ")
         }
         semaphore.wait()
         return allAssetMap
@@ -289,7 +272,8 @@ class AssetLibraryHelper: ObservableObject {
         }
         if newBuffer.count == 0 {
             print("Apparently, all of the photos have been deleted...let's error here")
-            throw CasperErrors.readError("We do not expect all of the photos to have been deleted...")
+            return []
+//            throw CasperErrors.readError("We do not expect all of the photos to have been deleted...")
         }
         
         // TODO: An unfortante issue with this function is that if we reduce the kMaxAssetsToScan to be small from a larger size (like 100 --> 5), we will lose 95 of the pending images (if indeed we wanted to process all of them). If we increase the kMaxAssetsToScan to 100 again after that, it won't matter, since oldestCreationTimeFromBefore will limit the addition of those 95 "older" assets. Ultimately, this probably won't be a problem (oldestCreationTimeFromBefore will effectively become when a sharing session was started, so this logic won't be around for too long).

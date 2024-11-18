@@ -70,12 +70,10 @@ class QueueProcessors {
                 counter += 1
                 if counter % AppParams.self.kProcessingQueueViewUpdateMultiplier == 0 {
                     counter = 0
-                    print("<<ASSET_SCANNER>> CACCHHHIINNGGGGGGGGG")
                     ProcessingQueue.shared.cacheLatest10Assets()
                 }
                 
                 // Start of processing work.
-                print("<<ASSET_SCANNER>> Asset scanning starting.")
                 self.statsManager.incrementAllTimerCounters()
                 ProcessingQueue.shared.incrementProcessingQueueWriteCounter()
                 do {
@@ -85,7 +83,6 @@ class QueueProcessors {
                 } catch {
                     print("Error occured in addNewImagesToQueue: \(error.localizedDescription)")
                 }
-                print("<<ASSET_SCANNER>> Asset scanning is done!")
                 
                 // We can also fetch and persist the latest asset scanned. This will update our front page.
                 do {
@@ -116,7 +113,7 @@ class QueueProcessors {
                     Thread.sleep(forTimeInterval: AppParams.kQueueProcessingPeriodicitySeconds)
                     continue
                 }
-                print("<<QUEUE_PROCESSOR>> BackgroundProcessor starting.")
+                print("<<QUEUE_PROCESSOR>> asyncQueueProcessor starting.")
                 let start_time = Date().timeIntervalSince1970
                 let asset = ProcessingQueue.shared.dequeue()
                 self.statsManager.incrementSecondsSpentProcessingQueue(additionalSeconds: Date().timeIntervalSince1970 - start_time)
@@ -144,22 +141,6 @@ class QueueProcessors {
                     WebSocketManager.shared.sendMessage(message: ">>>> Start")
                     WebSocketManager.shared.sendImage(imageData: imageData)
                     WebSocketManager.shared.sendMessage(message: "End <<<<")
-                    
-
-//                    // Perform the request
-//                    let task = URLSession.shared.dataTask(with: createUrlRequest(imageData: imageData)) { data, response, error in
-//                        if let error = error {
-//                            print("Error sending image: \(error)")
-//                            return
-//                        }
-//                        if let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 {
-//                            print("Image uploaded successfully")
-//                        }
-//                    }
-//
-//                    // Start the async network request.
-//                    task.resume()
-                    
                     
                 }
                 // End of processing work.
