@@ -56,21 +56,55 @@ class WebSocketManager: ObservableObject {
     
     // Send our UUID to the server.
     func registerDevice(uuid: String) {
+        if !isConnected {
+            print("Attempted registerDevice before isConnected.")
+            return
+        }
         socket.emit("register_device", uuid)
     }
     
     // Send a message to the server
     func sendMessage(message: String) {
+        if !isConnected {
+            print("Attempted sendMessage before isConnected.")
+            return
+        }
         socket.emit("message", message)
     }
     
     // Send an image to the server
     func sendImage(imageData: Data) {
-        if isConnected {
-            print("UPLOADDINNGGG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-            socket.emit("upload_image", imageData)
-        } else {
-            print("Socket is not connected yet.")
+        if !isConnected {
+            print("Attempted sendImage before isConnected.")
+            return
         }
+        print("UPLOADDINNGGG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+        socket.emit("upload_image", imageData)
+    }
+    
+    func requestAllUUIDs(completion: @escaping ([String]?) -> Void) {
+        print("Requesting all UUIDs from server...")
+        
+        if !isConnected {
+            print("Attempted requestAllUUIDs before isConnected.")
+            return
+        }
+        // Remove any existing listener to avoid duplicates
+        socket.off("all_uuids")
+        
+        // Add a listener for the response
+        // The server sends us a list of string UUIDs that have connected to it.
+        socket.on("all_uuids") { data, ack in
+            if let uuidList = data[0] as? [String] {
+                print("Received UUIDs: \(uuidList)")
+                completion(uuidList) // Pass the result to the completion handler
+            } else {
+                print("Failed to parse UUIDs from server.")
+                completion(nil) // Indicate an error
+            }
+        }
+        
+        // Emit the request
+        socket.emit("request_all_uuids")
     }
 }

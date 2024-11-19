@@ -25,6 +25,7 @@
 		E8204E4B2CE4804200371491 /* cert.pem in Resources */ = {isa = PBXBuildFile; fileRef = E8204E4A2CE4804200371491 /* cert.pem */; };
 		E8204E4E2CE4864400371491 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = E8204E4D2CE4864400371491 /* SocketIO */; };
 		E8656D7B2B72187F005DB5DB /* QueueProcessors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8656D7A2B72187F005DB5DB /* QueueProcessors.swift */; };
+		E86EF9622CEC7306009BD463 /* ManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86EF9612CEC7306009BD463 /* ManagementView.swift */; };
 		E8924EC62BBBEC6000AEB1E6 /* ProcessingQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +68,7 @@
 		E8204E482CE326A000371491 /* WebSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		E8204E4A2CE4804200371491 /* cert.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cert.pem; path = ../../server/server/ssl/cert.pem; sourceTree = "<group>"; };
 		E8656D7A2B72187F005DB5DB /* QueueProcessors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueProcessors.swift; sourceTree = "<group>"; };
+		E86EF9612CEC7306009BD463 /* ManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagementView.swift; sourceTree = "<group>"; };
 		E8924EC52BBBEC6000AEB1E6 /* ProcessingQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingQueueView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 				27217AA5296ACA500072F0BF /* CasperApp.swift */,
 				27E96D972990D56A00360B42 /* Errors.swift */,
 				27217AD6296B66F10072F0BF /* SessionView.swift */,
+				E86EF9612CEC7306009BD463 /* ManagementView.swift */,
 				27E96D93299093B800360B42 /* UserData.swift */,
 				27E96D9529909D1300360B42 /* AssetLibraryUtils.swift */,
 				E8656D7A2B72187F005DB5DB /* QueueProcessors.swift */,
@@ -310,6 +313,7 @@
 				27217AD7296B66F10072F0BF /* SessionView.swift in Sources */,
 				E8204E472CE3268100371491 /* EchoedImageView.swift in Sources */,
 				27217AB2296ACA510072F0BF /* Casper.xcdatamodeld in Sources */,
+				E86EF9622CEC7306009BD463 /* ManagementView.swift in Sources */,
 				27217AA6296ACA500072F0BF /* CasperApp.swift in Sources */,
 				27E96D8D296B6EFF00360B42 /* MainTabsView.swift in Sources */,
 				E8204E492CE326A000371491 /* WebSocketManager.swift in Sources */,

@@ -110,6 +110,7 @@ class QueueProcessors {
                 // Start of processing work.
                 if !ProcessingQueue.shared.getIsProcessingAllowed() {
                     print("<<QUEUE_PROCESSOR>> Queue Processing is not allowed, sleeping...")
+                    WebSocketManager.shared.sendMessage(message: "Not allowed to send image...")
                     Thread.sleep(forTimeInterval: AppParams.kQueueProcessingPeriodicitySeconds)
                     continue
                 }

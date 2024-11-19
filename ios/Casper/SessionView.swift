@@ -10,87 +10,48 @@ import Photos
 import BackgroundTasks
 
 struct SessionView: View {
-    @State private var showNewSessionCreationPage: Bool = false
-    @State private var assetMap: [String: Asset] = [:]
-    @State private var shownImage: UIImage = UIImage(systemName: "questionmark")!
-    @State private var isToggled = false
+    @State private var selectedUUID: String = "" // To hold the selected value
+    @EnvironmentObject var webSocketManager: WebSocketManager
+    @State var loadedUUIDs: [String] = []
         
     // DataManagers
     let statsManager = StatsManager()
     let imageManager = ImageDataManager()
     
     var body: some View {
-        ZStack {
-            Color(.systemGray2)
-                .ignoresSafeArea()
-            
-            VStack() {
-                
-                // Large red "Kill" button
-                Button(action: {
-                    // Kill the app. Make it quit too so that the user doesn't think it's still running
-                    print("KILLING THE APP BECAUSE THE USER REQUESTED IT!")
-                    exit(-1)
-                }) {
-                    Text("KILL")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                        .frame(width: 400, height: 100)
-                        .background(Color.red)
-                        .cornerRadius(10)
-                }
-                
-                // Large red "Kill" button
-                Button(action: {
-                    // Kill the app. Make it quit too so that the user doesn't think it's still running
-                    print("<<RESET>> resetting pqueue and asset buffer....")
-                    ProcessingQueue.shared.debugUseOnlyResetProcessingQueue()
-                    imageManager.setAssetBuffer(assetBuffer: [PhotoAsset]())
-                }) {
-                    Text("Reset Processing Queue Storage?")
-                        .font(.custom("San Francisco", size: 20))
-                        .foregroundColor(.white)
-                        .frame(width: 400, height: 80)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                
-                Toggle("Queue Processing is On?", isOn: $isToggled)
-                    .font(.custom("San Francisco", size: 20))
-                    .onChange(of: isToggled) { newValue in
-                        print("Toggle switched to \(newValue)")
-                        ProcessingQueue.shared.setIsProcessingAllowed(is_allowed: newValue)
-                        print("isProcessingAllowed is switched to \(ProcessingQueue.shared.getIsProcessingAllowed() ? "true" : "false")")
+        VStack {
+            if !loadedUUIDs.isEmpty {
+                Picker("Select UUID", selection: $selectedUUID) {
+                    ForEach(loadedUUIDs, id: \.self) { uuid in
+                        Text(uuid).tag(uuid) // Set the value of the tag to be the UUID
                     }
-                            .padding()
-                
-                
-                Spacer().frame(height:50)
-                
-                
-                Text("Sessions!")
-                    .foregroundColor(Color(.systemBlue))
-                    .bold(false)
-                    .font(.custom("Copperplate", size: 50))
-                
-                Button(action: {
-                    assetMap = AssetLibraryHelper.shared.readFromPhotoLibrary()
-                }) {
-                    Text("read photo library + print it")
                 }
-                .foregroundColor(Color.red)
-                .bold(false)
-                .font(.custom("Copperplate", size: 20))
-                
-                Text("size of assetmap: \(assetMap.count)")
-                
-                Image(uiImage: AssetLibraryHelper.shared.fetchPhotoWithLocalId(localId: imageManager.getLastDetectedAsset().localId))
-                    .resizable()
-                    .frame(width: 200, height: 200) // Set the desired width and height
-                    .scaledToFit() // Maintain the aspect ratio of the image
+                .pickerStyle(MenuPickerStyle()) // Use the MenuPickerStyle for dropdown-like UI
+                .padding() // Add padding inside the border
+                .background(Color.white) // Set background color of the Picker
+                .cornerRadius(10) // Rounded corners
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10) // Border with rounded corners
+                        .stroke(Color.blue, lineWidth: 2) // Border color and width
+                )
+                .shadow(radius: 5) // Optional: Add shadow for visual effect
+                            
+            } else {
+                Text("Loading UUIDs...")
             }
+            
+            Text("Sessions!").padding()
+            Text("Loaded UUIDs: \(loadedUUIDs.joined(separator: ", "))")
+                            .padding()
+        }
+        .onAppear {
+            webSocketManager.sendMessage(message: "Focusing sessions!")
+            webSocketManager.requestAllUUIDs(completion: {uuids in
+                loadedUUIDs = uuids ?? []
+            })
         }
     }
+     
 }
 
 struct SessionView_Previews: PreviewProvider {

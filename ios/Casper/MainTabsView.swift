@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainTabsView: View {    
-    @State private var default_tab = 1
+    @State private var default_tab = 2
     @EnvironmentObject var webSocketManager: WebSocketManager
 
     var body: some View {
@@ -17,17 +17,17 @@ struct MainTabsView: View {
                 .tabItem {
                     Label("Sessions", systemImage: "network")
                 }.tag(1)
+            ManagementView()
+                .tabItem {
+                    Label("Management", systemImage: "cat")
+                }.tag(2)
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
-                }.tag(2)
+                }.tag(3)
             ProcessingQueueView()
                 .tabItem {
                     Label("Queue", systemImage: "photo.stack.fill")
-                }.tag(3)
-            EchoedImageView()
-                .tabItem {
-                    Label("Echo", systemImage: "dog")
                 }.tag(4)
         }
         .navigationBarBackButtonHidden(true)
