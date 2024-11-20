@@ -90,11 +90,11 @@ class WebSocketManager: ObservableObject {
             return
         }
         // Remove any existing listener to avoid duplicates
-        socket.off("all_uuids")
+        socket.off("response_all_uuids")
         
         // Add a listener for the response
         // The server sends us a list of string UUIDs that have connected to it.
-        socket.on("all_uuids") { data, ack in
+        socket.on("response_all_uuids") { data, ack in
             if let uuidList = data[0] as? [String] {
                 print("Received UUIDs: \(uuidList)")
                 completion(uuidList) // Pass the result to the completion handler
@@ -106,5 +106,69 @@ class WebSocketManager: ObservableObject {
         
         // Emit the request
         socket.emit("request_all_uuids")
+    }
+    
+    func requestActiveSessions(completion: @escaping ([(String, Int64)]?) -> Void) {
+        print("Requesting all active sessions from server...")
+        
+        if !isConnected {
+            print("Attempted requestActiveSessions before isConnected.")
+            return
+        }
+        // Remove any existing listener to avoid duplicates
+        socket.off("response_active_sessions")
+        
+        // Add a listener for the response
+        // The server sends us a tuple of (alias, expiration time) for when the current session expires.
+        // Server always responds in UNIX micros for time.
+        socket.on("response_active_sessions") { data, ack in
+            print("Got these active sessions: \(data)")
+            if let arrayData = data[0] as? [[Any]] {
+                let receivedTuples = arrayData.compactMap { item -> (String, Int64)? in
+                    // Debug print to inspect the types
+                    print("Item: \(item), types: \(type(of: item[0])), \(type(of: item[1]))")
+                    
+                    // Attempt to cast the first item to a String
+                    guard let name = item[0] as? String else {
+                        print("Failed to cast name")
+                        return nil
+                    }
+                    
+                    // Convert the second item (NSDecimalNumber) to Int64
+                    guard let ageDecimal = item[1] as? NSDecimalNumber else {
+                        print("Failed to cast age to NSDecimalNumber")
+                        return nil
+                    }
+                    
+                    // Safely convert NSDecimalNumber to Int64
+                    let age = ageDecimal.int64Value
+                    
+                    return (name, age)
+                }
+                print(" >> Received array of sessions: \(receivedTuples)")
+                completion(receivedTuples)
+            }
+        }
+
+        // Request sessions from the server
+        socket.emit("request_active_sessions")
+    }
+    
+    func updateAlias(newAlias: String) {
+        if !isConnected {
+            print("Attempted updateAlias before isConnected.")
+            return
+        }
+        print("Updating new alias through web socket!")
+        socket.emit("update_alias", newAlias)
+    }
+    
+    func createSession(sharee: String, durationHours: Int) {
+        if !isConnected {
+            print("Attempted createSession before isConnected.")
+            return
+        }
+        print("Creating new alias through web socket!")
+        socket.emit("create_session", sharee, durationHours)
     }
 }
